@@ -1,6 +1,6 @@
 # HR Workflow Designer
 
-> Visual workflow orchestration for HR Operations — design, validate, simulate, and deploy process logic without writing code.
+> Visual workflow orchestration for HR Operations and IT Automation — design, validate, simulate, and deploy process logic without writing code.
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?style=flat-square&logo=vercel)](https://hr-workflow-agent.vercel.app/)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=flat-square&logo=github)](https://github.com/Aashik1701?tab=repositories)
@@ -79,43 +79,19 @@ Serialize the full workflow graph and POST it to the simulation endpoint. A step
 
 Serialize any workflow to JSON for version control, handoff, or templating. Import a saved JSON to restore the full canvas state including node positions, types, and configuration.
 
-### AI Workflow Copilot (🤖 AI-Powered)
+### AI Workflow Copilot (AI-Powered)
 
 Describe your intent in plain English (e.g., "send email and then ping slack"). The AI auto-wires the nodes, handles the layout, and scaffolds the entire logic path instantly on the canvas.
 
-### Real-Time Execution Playback (▶️ Visual Debugger)
+### Real-Time Execution Playback (Visual Debugger)
 
-Visualize exactly how data flows. Nodes pulse **Green** for success and **Red** for failure as the simulation runs, allowing for real-time logic tracing and debugging.
+Visualize exactly how data flows. Nodes pulse **Green** for success and **Red** for failure as the simulation runs, allowing for real-time logic tracing and debugging on the canvas.
 
-### A/B Testing & Split Logic (🔀 Orchestration)
+### Advanced Orchestration (Split & Delay)
 
-Deploy **Split Flow** nodes to run experiments. Route traffic (e.g., 50/50 split) between different paths to test which onboarding sequence or notification channel performs better.
+Deploy **Split Flow** nodes for A/B testing and **Delay Nodes** to pause execution for minutes, hours, or days. The simulation engine handles branching logic and time-based wait states.
 
-### Precision Wait & Delay Nodes (⏳ Time Logic)
-
-Introduce **Delay Nodes** to pause execution for minutes, hours, or days (e.g., "Wait 3 days before sending a follow-up reminder").
-
-### Visual Data Mapping (🔗 Variable Engine)
-
-Turn your designer into a true logic engine with `{{ mustache }}` variable interpolation. Pass data payloads seamlessly between nodes to create dynamic, personalized automations.
-
-### AI Workflow Copilot (🤖 AI-Powered)
-
-Describe your intent in plain English (e.g., "send email and then ping slack"). The AI auto-wires the nodes, handles the layout, and scaffolds the entire logic path instantly on the canvas.
-
-### Real-Time Execution Playback (▶️ Visual Debugger)
-
-Visualize exactly how data flows. Nodes pulse **Green** for success and **Red** for failure as the simulation runs, allowing for real-time logic tracing and debugging.
-
-### A/B Testing & Split Logic (🔀 Orchestration)
-
-Deploy **Split Flow** nodes to run experiments. Route traffic (e.g., 50/50 split) between different paths to test which onboarding sequence or notification channel performs better.
-
-### Precision Wait & Delay Nodes (⏳ Time Logic)
-
-Introduce **Delay Nodes** to pause execution for minutes, hours, or days (e.g., "Wait 3 days before sending a follow-up reminder").
-
-### Visual Data Mapping (🔗 Variable Engine)
+### Visual Data Mapping (Variable Engine)
 
 Turn your designer into a true logic engine with `{{ mustache }}` variable interpolation. Pass data payloads seamlessly between nodes to create dynamic, personalized automations.
 
@@ -136,7 +112,7 @@ A conversion-optimized landing page introduces the product with animated workflo
 ┌───────────────────────────▼─────────────────────────────────────┐
 │                       Frontend Layer                            │
 │                                                                 │
-│  LandingPage  ──►  Dashboard  ──►  WorkflowEditor              │
+│  LandingPage  ──►  Dashboard  ──►  WorkflowEditor               │
 │       │                │                  │                     │
 │  NodeSidebar    StatsCards          ReactFlow Canvas            │
 │  NodeFormPanel  ActivityLog         NodeSidebar                 │
@@ -151,22 +127,22 @@ A conversion-optimized landing page introduces the product with animated workflo
 └──────────────┬────────────────────────────┬─────────────────────┘
                │  Custom Hooks              │  Domain Logic
 ┌──────────────▼──────────────┐  ┌──────────▼─────────────────────┐
-│     useSimulation           │  │     graphValidator.ts           │
-│     useAutomations          │  │     serializer.ts               │
-│     useWorkflow             │  │     nodeDefaults.ts             │
+│     useSimulation           │  │     graphValidator.ts          │
+│     useAutomations          │  │     serializer.ts              │
+│     useWorkflow             │  │     nodeDefaults.ts            │
 └──────────────┬──────────────┘  └────────────────────────────────┘
                │  HTTP
 ┌──────────────▼──────────────────────────────────────────────────┐
 │                      API Layer                                  │
 │                                                                 │
-│   workflowApi.ts   GET /api/automations                        │
+│   workflowApi.ts   GET /api/automations                         │
 │                    POST /api/simulate                           │
 └──────────────┬──────────────────────────────────────────────────┘
                │  Intercepted in dev
 ┌──────────────▼──────────────────────────────────────────────────┐
 │              Mock Service Worker (MSW)                          │
 │                                                                 │
-│   handlers.ts  →  deterministic automation catalog             │
+│   handlers.ts  →  deterministic automation catalog              │
 │                →  simulated execution timeline                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -598,15 +574,15 @@ Workflows serialize as a flat JSON object containing `nodes` and `edges` arrays.
 
 ## Roadmap
 
-| Priority | Item                                                                             |
-| -------- | -------------------------------------------------------------------------------- |
-| High     | Replace MSW simulation with real backend integration (Node.js or Edge Functions) |
-| High     | Supabase integration — persist workflows, activity logs, simulation history      |
-| High     | Expand E2E tests to cover canvas interactions and full simulation flow           |
+| Priority | Item                                                                              |
+| -------- | --------------------------------------------------------------------------------- |
+| High     | Replace MSW simulation with real backend integration (Node.js or Edge Functions)  |
+| High     | Supabase integration — persist workflows, activity logs, simulation history       |
+| High     | Expand E2E tests to cover canvas interactions and full simulation flow            |
 | Medium   | **🔐 Real Authentication (FUTURE UPDATED)** — Supabase Auth for secure login      |
 | Medium   | **📂 Workspaces (FUTURE UPDATED)** — Isolated orchestrators for HR, IT, and Legal |
-| Medium   | Workflow versioning — named snapshots and audit trail per workflow               |
-| Low      | Telemetry dashboard — per-workflow execution analytics and completion rates      |
+| Medium   | Workflow versioning — named snapshots and audit trail per workflow                |
+| Low      | Telemetry dashboard — per-workflow execution analytics and completion rates       |
 
 ---
 
