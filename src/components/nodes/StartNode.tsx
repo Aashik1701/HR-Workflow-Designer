@@ -1,10 +1,12 @@
-import type { NodeProps } from '@xyflow/react';
+import type { Node, NodeProps } from '@xyflow/react';
 import { Play } from 'lucide-react';
 import { BaseNode } from './BaseNode';
 import type { StartNodeData } from '../../types/workflow';
 
-export function StartNode({ id, selected, data }: NodeProps) {
-  const d = data as unknown as StartNodeData;
+type StartFlowNode = Node<StartNodeData, 'startNode'>;
+
+export function StartNode({ id, selected, data }: NodeProps<StartFlowNode>) {
+  const d = data;
   return (
     <BaseNode
       id={id}

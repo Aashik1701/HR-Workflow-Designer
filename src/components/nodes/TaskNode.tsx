@@ -1,10 +1,12 @@
-import type { NodeProps } from '@xyflow/react';
+import type { Node, NodeProps } from '@xyflow/react';
 import { ClipboardList, User, Calendar } from 'lucide-react';
 import { BaseNode } from './BaseNode';
 import type { TaskNodeData } from '../../types/workflow';
 
-export function TaskNode({ id, selected, data }: NodeProps) {
-  const d = data as unknown as TaskNodeData;
+type TaskFlowNode = Node<TaskNodeData, 'taskNode'>;
+
+export function TaskNode({ id, selected, data }: NodeProps<TaskFlowNode>) {
+  const d = data;
   return (
     <BaseNode
       id={id}

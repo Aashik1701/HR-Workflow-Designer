@@ -43,7 +43,7 @@ const automatedStepNodeDataSchema = z.object({
   type: z.literal('automatedStepNode'),
   title: z.string(),
   actionId: z.string(),
-  actionParams: z.record(z.string()),
+  actionParams: z.record(z.string(), z.string()),
   hasError: z.boolean().optional(),
   errorMessage: z.string().optional(),
 });

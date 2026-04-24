@@ -21,8 +21,8 @@ interface WorkflowStore {
   setSelectedNodeId: (id: string | null) => void;
 
   // React Flow change handlers
-  onNodesChange: (changes: NodeChange[]) => void;
-  onEdgesChange: (changes: EdgeChange[]) => void;
+  onNodesChange: (changes: NodeChange<WorkflowNode>[]) => void;
+  onEdgesChange: (changes: EdgeChange<WorkflowEdge>[]) => void;
 
   // Data mutation
   updateNodeData: (nodeId: string, data: WorkflowNodeData) => void;

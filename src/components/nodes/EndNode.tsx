@@ -1,10 +1,12 @@
-import type { NodeProps } from '@xyflow/react';
+import type { Node, NodeProps } from '@xyflow/react';
 import { Flag } from 'lucide-react';
 import { BaseNode } from './BaseNode';
 import type { EndNodeData } from '../../types/workflow';
 
-export function EndNode({ id, selected, data }: NodeProps) {
-  const d = data as unknown as EndNodeData;
+type EndFlowNode = Node<EndNodeData, 'endNode'>;
+
+export function EndNode({ id, selected, data }: NodeProps<EndFlowNode>) {
+  const d = data;
   return (
     <BaseNode
       id={id}

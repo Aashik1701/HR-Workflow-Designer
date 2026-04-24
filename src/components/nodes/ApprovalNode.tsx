@@ -1,10 +1,12 @@
-import type { NodeProps } from '@xyflow/react';
+import type { Node, NodeProps } from '@xyflow/react';
 import { CheckCircle2, ShieldCheck } from 'lucide-react';
 import { BaseNode } from './BaseNode';
 import type { ApprovalNodeData } from '../../types/workflow';
 
-export function ApprovalNode({ id, selected, data }: NodeProps) {
-  const d = data as unknown as ApprovalNodeData;
+type ApprovalFlowNode = Node<ApprovalNodeData, 'approvalNode'>;
+
+export function ApprovalNode({ id, selected, data }: NodeProps<ApprovalFlowNode>) {
+  const d = data;
   return (
     <BaseNode
       id={id}

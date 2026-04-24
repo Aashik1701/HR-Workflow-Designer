@@ -1,10 +1,12 @@
-import type { NodeProps } from '@xyflow/react';
+import type { Node, NodeProps } from '@xyflow/react';
 import { Zap } from 'lucide-react';
 import { BaseNode } from './BaseNode';
 import type { AutomatedStepNodeData } from '../../types/workflow';
 
-export function AutomatedStepNode({ id, selected, data }: NodeProps) {
-  const d = data as unknown as AutomatedStepNodeData;
+type AutomatedStepFlowNode = Node<AutomatedStepNodeData, 'automatedStepNode'>;
+
+export function AutomatedStepNode({ id, selected, data }: NodeProps<AutomatedStepFlowNode>) {
+  const d = data;
   return (
     <BaseNode
       id={id}
