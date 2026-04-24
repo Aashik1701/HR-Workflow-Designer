@@ -79,6 +79,46 @@ Serialize the full workflow graph and POST it to the simulation endpoint. A step
 
 Serialize any workflow to JSON for version control, handoff, or templating. Import a saved JSON to restore the full canvas state including node positions, types, and configuration.
 
+### AI Workflow Copilot (🤖 AI-Powered)
+
+Describe your intent in plain English (e.g., "send email and then ping slack"). The AI auto-wires the nodes, handles the layout, and scaffolds the entire logic path instantly on the canvas.
+
+### Real-Time Execution Playback (▶️ Visual Debugger)
+
+Visualize exactly how data flows. Nodes pulse **Green** for success and **Red** for failure as the simulation runs, allowing for real-time logic tracing and debugging.
+
+### A/B Testing & Split Logic (🔀 Orchestration)
+
+Deploy **Split Flow** nodes to run experiments. Route traffic (e.g., 50/50 split) between different paths to test which onboarding sequence or notification channel performs better.
+
+### Precision Wait & Delay Nodes (⏳ Time Logic)
+
+Introduce **Delay Nodes** to pause execution for minutes, hours, or days (e.g., "Wait 3 days before sending a follow-up reminder").
+
+### Visual Data Mapping (🔗 Variable Engine)
+
+Turn your designer into a true logic engine with `{{ mustache }}` variable interpolation. Pass data payloads seamlessly between nodes to create dynamic, personalized automations.
+
+### AI Workflow Copilot (🤖 AI-Powered)
+
+Describe your intent in plain English (e.g., "send email and then ping slack"). The AI auto-wires the nodes, handles the layout, and scaffolds the entire logic path instantly on the canvas.
+
+### Real-Time Execution Playback (▶️ Visual Debugger)
+
+Visualize exactly how data flows. Nodes pulse **Green** for success and **Red** for failure as the simulation runs, allowing for real-time logic tracing and debugging.
+
+### A/B Testing & Split Logic (🔀 Orchestration)
+
+Deploy **Split Flow** nodes to run experiments. Route traffic (e.g., 50/50 split) between different paths to test which onboarding sequence or notification channel performs better.
+
+### Precision Wait & Delay Nodes (⏳ Time Logic)
+
+Introduce **Delay Nodes** to pause execution for minutes, hours, or days (e.g., "Wait 3 days before sending a follow-up reminder").
+
+### Visual Data Mapping (🔗 Variable Engine)
+
+Turn your designer into a true logic engine with `{{ mustache }}` variable interpolation. Pass data payloads seamlessly between nodes to create dynamic, personalized automations.
+
 ### Landing Page
 
 A conversion-optimized landing page introduces the product with animated workflow previews, feature highlights, and CTAs routing into the Dashboard and Workflow Editor.
@@ -563,12 +603,9 @@ Workflows serialize as a flat JSON object containing `nodes` and `edges` arrays.
 | High     | Replace MSW simulation with real backend integration (Node.js or Edge Functions) |
 | High     | Supabase integration — persist workflows, activity logs, simulation history      |
 | High     | Expand E2E tests to cover canvas interactions and full simulation flow           |
-| Medium   | Supabase Auth — secure login and user-scoped workflow storage                    |
-| Medium   | Role-based access — separate permissions for HR Admins, Managers, and Viewers    |
+| Medium   | **🔐 Real Authentication (FUTURE UPDATED)** — Supabase Auth for secure login      |
+| Medium   | **📂 Workspaces (FUTURE UPDATED)** — Isolated orchestrators for HR, IT, and Legal |
 | Medium   | Workflow versioning — named snapshots and audit trail per workflow               |
-| Low      | Split Flow nodes — A/B traffic routing with configurable percentage splits       |
-| Low      | Delay/Wait nodes — time-based pause steps (minutes, hours, days)                 |
-| Low      | Variable interpolation — `{{ mustache }}` syntax for dynamic data payloads       |
 | Low      | Telemetry dashboard — per-workflow execution analytics and completion rates      |
 
 ---
