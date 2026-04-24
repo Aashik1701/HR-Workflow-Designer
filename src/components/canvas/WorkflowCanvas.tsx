@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 import {
   ReactFlow,
   Background,
@@ -7,6 +7,7 @@ import {
   addEdge,
   type Connection,
   BackgroundVariant,
+  useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -17,7 +18,7 @@ import { ApprovalNode } from '../nodes/ApprovalNode';
 import { AutomatedStepNode } from '../nodes/AutomatedStepNode';
 import { EndNode } from '../nodes/EndNode';
 import { getDefaultNodeData } from '../../utils/nodeDefaults';
-import type { NodeType } from '../../types/workflow';
+import type { NodeType, WorkflowNode } from '../../types/workflow';
 
 // Register custom node types — must be defined outside component to avoid re-creation
 const nodeTypes = {
@@ -35,12 +36,13 @@ export function WorkflowCanvas() {
     onNodesChange, onEdgesChange,
     setSelectedNodeId,
   } = useWorkflowStore();
-
-  const reactFlowWrapper = useRef<HTMLDivElement>(null);
+  const { screenToFlowPosition } = useReactFlow();
 
   const onConnect = useCallback(
-    (connection: Connection) => setEdges(addEdge({ ...connection, animated: true }, edges)),
-    [edges, setEdges]
+    (connection: Connection) => {
+      setEdges((currentEdges) => addEdge({ ...connection, animated: true }, currentEdges));
+    },
+    [setEdges]
   );
 
   // Handle drop from sidebar
@@ -48,24 +50,28 @@ export function WorkflowCanvas() {
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
       const type = event.dataTransfer.getData('application/reactflow-type') as NodeType;
-      if (!type || !reactFlowWrapper.current) return;
+      if (!type) return;
 
-      const bounds = reactFlowWrapper.current.getBoundingClientRect();
-      const position = {
-        x: event.clientX - bounds.left - 112,
-        y: event.clientY - bounds.top - 40,
-      };
+      const position = screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
 
-      const newNode = {
-        id: `${type}-${Date.now()}`,
+      const nodeId =
+        typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+          ? `${type}-${crypto.randomUUID()}`
+          : `${type}-${Date.now()}`;
+
+      const newNode: WorkflowNode = {
+        id: nodeId,
         type,
         position,
         data: getDefaultNodeData(type),
       };
 
-      setNodes([...nodes, newNode]);
+      setNodes((currentNodes) => [...currentNodes, newNode]);
     },
-    [nodes, setNodes]
+    [screenToFlowPosition, setNodes]
   );
 
   const onDragOver = useCallback((e: React.DragEvent) => {
@@ -81,7 +87,7 @@ export function WorkflowCanvas() {
   const onPaneClick = useCallback(() => setSelectedNodeId(null), [setSelectedNodeId]);
 
   return (
-    <div ref={reactFlowWrapper} className="h-full w-full">
+    <div className="h-full w-full">
       <ReactFlow
         nodes={nodes}
         edges={edges}

@@ -1,7 +1,7 @@
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useWorkflowStore } from '../../store/workflowStore';
 import { KeyValueEditor } from '../ui/KeyValueEditor';
 import type { TaskNodeData } from '../../types/workflow';
@@ -13,14 +13,15 @@ const schema = z.object({
   dueDate: z.string().optional().default(''),
 });
 
-type FormValues = z.infer<typeof schema>;
+type FormValues = z.input<typeof schema>;
 
 interface Props { nodeId: string; data: TaskNodeData; }
 
 export function TaskNodeForm({ nodeId, data }: Props) {
   const { updateNodeData } = useWorkflowStore();
+  const latestDataRef = useRef(data);
 
-  const { register, watch, formState: { errors } } = useForm<FormValues>({
+  const { register, control, formState: { errors } } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
       title: data.title,
@@ -30,14 +31,34 @@ export function TaskNodeForm({ nodeId, data }: Props) {
     },
     mode: 'onChange',
   });
+  const watchedValues = useWatch({ control });
 
-  // Live sync to store on every change
   useEffect(() => {
-    const sub = watch(values => {
-      updateNodeData(nodeId, { ...data, ...values });
+    latestDataRef.current = data;
+  }, [data]);
+
+  // Live sync to store on every change.
+  useEffect(() => {
+    const parsedValues = schema.safeParse(watchedValues);
+    if (!parsedValues.success) return;
+
+    const currentData = latestDataRef.current;
+    const nextValues = parsedValues.data;
+
+    if (
+      currentData.title === nextValues.title &&
+      currentData.description === nextValues.description &&
+      currentData.assignee === nextValues.assignee &&
+      currentData.dueDate === nextValues.dueDate
+    ) {
+      return;
+    }
+
+    updateNodeData(nodeId, {
+      ...currentData,
+      ...nextValues,
     });
-    return () => sub.unsubscribe();
-  }, [watch, nodeId, data, updateNodeData]);
+  }, [watchedValues, nodeId, updateNodeData]);
 
   const inputClass = "w-full text-xs border border-slate-200 rounded px-2 py-1.5 focus:ring-1 ring-indigo-400 outline-none";
   const errorClass = "text-[10px] text-red-500 mt-0.5";

@@ -4,18 +4,20 @@ import {
   applyEdgeChanges,
   type NodeChange,
   type EdgeChange,
-  type Node,
-  type Edge,
 } from '@xyflow/react';
+import type { WorkflowEdge, WorkflowNode, WorkflowNodeData } from '../types/workflow';
+
+type NodesUpdater = WorkflowNode[] | ((current: WorkflowNode[]) => WorkflowNode[]);
+type EdgesUpdater = WorkflowEdge[] | ((current: WorkflowEdge[]) => WorkflowEdge[]);
 
 interface WorkflowStore {
-  nodes: Node[];
-  edges: Edge[];
+  nodes: WorkflowNode[];
+  edges: WorkflowEdge[];
   selectedNodeId: string | null;
 
   // Setters
-  setNodes: (nodes: Node[]) => void;
-  setEdges: (edges: Edge[]) => void;
+  setNodes: (nodes: NodesUpdater) => void;
+  setEdges: (edges: EdgesUpdater) => void;
   setSelectedNodeId: (id: string | null) => void;
 
   // React Flow change handlers
@@ -23,11 +25,11 @@ interface WorkflowStore {
   onEdgesChange: (changes: EdgeChange[]) => void;
 
   // Data mutation
-  updateNodeData: (nodeId: string, data: unknown) => void;
+  updateNodeData: (nodeId: string, data: WorkflowNodeData) => void;
 
   // Graph operations
   clearWorkflow: () => void;
-  importWorkflow: (nodes: Node[], edges: Edge[]) => void;
+  importWorkflow: (nodes: WorkflowNode[], edges: WorkflowEdge[]) => void;
 }
 
 export const useWorkflowStore = create<WorkflowStore>((set, get) => ({
@@ -35,20 +37,26 @@ export const useWorkflowStore = create<WorkflowStore>((set, get) => ({
   edges: [],
   selectedNodeId: null,
 
-  setNodes: (nodes) => set({ nodes }),
-  setEdges: (edges) => set({ edges }),
+  setNodes: (nextNodes) =>
+    set((state) => ({
+      nodes: typeof nextNodes === 'function' ? nextNodes(state.nodes) : nextNodes,
+    })),
+  setEdges: (nextEdges) =>
+    set((state) => ({
+      edges: typeof nextEdges === 'function' ? nextEdges(state.edges) : nextEdges,
+    })),
   setSelectedNodeId: (id) => set({ selectedNodeId: id }),
 
   onNodesChange: (changes) =>
-    set({ nodes: applyNodeChanges(changes, get().nodes) }),
+    set((state) => ({ nodes: applyNodeChanges(changes, state.nodes) })),
 
   onEdgesChange: (changes) =>
-    set({ edges: applyEdgeChanges(changes, get().edges) }),
+    set((state) => ({ edges: applyEdgeChanges(changes, state.edges) })),
 
   updateNodeData: (nodeId, data) =>
     set({
       nodes: get().nodes.map((n) =>
-        n.id === nodeId ? { ...n, data: data as Record<string, unknown> } : n
+        n.id === nodeId ? { ...n, data } : n
       ),
     }),
 

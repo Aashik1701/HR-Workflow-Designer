@@ -3,6 +3,8 @@ import { useWorkflowStore } from '../../store/workflowStore';
 import { validateWorkflow } from '../../utils/graphValidator';
 import toast from 'react-hot-toast';
 import { useRef } from 'react';
+import { ZodError } from 'zod';
+import { parseWorkflowImport } from '../../utils/workflowImportSchema';
 
 export function CanvasToolbar() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -29,10 +31,18 @@ export function CanvasToolbar() {
     const reader = new FileReader();
     reader.onload = (ev) => {
       try {
-        const { nodes, edges } = JSON.parse(ev.target?.result as string);
+        const raw = JSON.parse(ev.target?.result as string);
+        const { nodes, edges } = parseWorkflowImport(raw);
         useWorkflowStore.getState().importWorkflow(nodes, edges);
         toast.success('Workflow imported!');
-      } catch {
+      } catch (error) {
+        if (error instanceof ZodError) {
+          const issue = error.issues[0];
+          const issuePath = issue?.path.join('.') || 'workflow';
+          toast.error(`Invalid workflow schema at ${issuePath}: ${issue?.message || 'Invalid value'}`);
+          return;
+        }
+
         toast.error('Invalid JSON file');
       }
     };

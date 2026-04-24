@@ -1,4 +1,9 @@
-import type { AutomationAction, SimulationResult } from '../types/workflow';
+import type {
+  AutomationAction,
+  SimulationResult,
+  WorkflowEdge,
+  WorkflowNode,
+} from '../types/workflow';
 
 export async function getAutomations(): Promise<AutomationAction[]> {
   const res = await fetch('/api/automations');
@@ -7,8 +12,8 @@ export async function getAutomations(): Promise<AutomationAction[]> {
 }
 
 export async function simulateWorkflow(
-  nodes: unknown[],
-  edges: unknown[]
+  nodes: WorkflowNode[],
+  edges: WorkflowEdge[]
 ): Promise<SimulationResult> {
   const res = await fetch('/api/simulate', {
     method: 'POST',

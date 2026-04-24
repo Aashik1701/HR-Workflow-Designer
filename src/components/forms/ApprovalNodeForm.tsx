@@ -1,7 +1,7 @@
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useWorkflowStore } from '../../store/workflowStore';
 import type { ApprovalNodeData } from '../../types/workflow';
 
@@ -11,12 +11,13 @@ const schema = z.object({
   autoApproveThreshold: z.coerce.number().min(0).max(100),
 });
 
-type FormValues = z.infer<typeof schema>;
+type FormValues = z.input<typeof schema>;
 interface Props { nodeId: string; data: ApprovalNodeData; }
 
 export function ApprovalNodeForm({ nodeId, data }: Props) {
   const { updateNodeData } = useWorkflowStore();
-  const { register, watch, formState: { errors } } = useForm<FormValues>({
+  const latestDataRef = useRef(data);
+  const { register, control, formState: { errors } } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
       title: data.title,
@@ -25,11 +26,32 @@ export function ApprovalNodeForm({ nodeId, data }: Props) {
     },
     mode: 'onChange',
   });
+  const watchedValues = useWatch({ control });
 
   useEffect(() => {
-    const sub = watch(values => updateNodeData(nodeId, { ...data, ...values }));
-    return () => sub.unsubscribe();
-  }, [watch, nodeId, data, updateNodeData]);
+    latestDataRef.current = data;
+  }, [data]);
+
+  useEffect(() => {
+    const parsedValues = schema.safeParse(watchedValues);
+    if (!parsedValues.success) return;
+
+    const currentData = latestDataRef.current;
+    const nextValues = parsedValues.data;
+
+    if (
+      currentData.title === nextValues.title &&
+      currentData.approverRole === nextValues.approverRole &&
+      currentData.autoApproveThreshold === nextValues.autoApproveThreshold
+    ) {
+      return;
+    }
+
+    updateNodeData(nodeId, {
+      ...currentData,
+      ...nextValues,
+    });
+  }, [watchedValues, nodeId, updateNodeData]);
 
   const inputClass = "w-full text-xs border border-slate-200 rounded px-2 py-1.5 focus:ring-1 ring-indigo-400 outline-none";
   const labelClass = "block text-xs font-medium text-slate-600 mb-1";

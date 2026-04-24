@@ -1,3 +1,5 @@
+import type { Edge, Node } from '@xyflow/react';
+
 // ─── Node Data Types ───────────────────────────────────────────────────────
 
 export type NodeType =
@@ -13,6 +15,7 @@ export interface KeyValuePair {
 }
 
 export interface StartNodeData {
+  [key: string]: unknown;
   type: 'startNode';
   title: string;
   metadata: KeyValuePair[];
@@ -21,6 +24,7 @@ export interface StartNodeData {
 }
 
 export interface TaskNodeData {
+  [key: string]: unknown;
   type: 'taskNode';
   title: string;
   description: string;
@@ -32,6 +36,7 @@ export interface TaskNodeData {
 }
 
 export interface ApprovalNodeData {
+  [key: string]: unknown;
   type: 'approvalNode';
   title: string;
   approverRole: 'Manager' | 'HRBP' | 'Director';
@@ -47,6 +52,7 @@ export interface AutomationAction {
 }
 
 export interface AutomatedStepNodeData {
+  [key: string]: unknown;
   type: 'automatedStepNode';
   title: string;
   actionId: string;
@@ -56,6 +62,7 @@ export interface AutomatedStepNodeData {
 }
 
 export interface EndNodeData {
+  [key: string]: unknown;
   type: 'endNode';
   endMessage: string;
   summaryFlag: boolean;
@@ -69,6 +76,14 @@ export type WorkflowNodeData =
   | ApprovalNodeData
   | AutomatedStepNodeData
   | EndNodeData;
+
+export type WorkflowNode = Node<WorkflowNodeData, NodeType>;
+export type WorkflowEdge = Edge;
+
+export interface WorkflowPayload {
+  nodes: WorkflowNode[];
+  edges: WorkflowEdge[];
+}
 
 // ─── Simulation Types ──────────────────────────────────────────────────────
 
