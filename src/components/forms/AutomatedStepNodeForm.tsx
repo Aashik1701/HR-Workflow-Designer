@@ -21,8 +21,8 @@ export function AutomatedStepNodeForm({ nodeId, data }: Props) {
   };
 
   const selectedAction = automations.find(a => a.id === data.actionId);
-  const inputClass = "w-full text-xs border border-slate-200 rounded px-2 py-1.5 focus:ring-1 ring-indigo-400 outline-none";
-  const labelClass = "block text-xs font-medium text-slate-600 mb-1";
+  const inputClass = "w-full text-xs border border-white/10 bg-[#12121a] text-white placeholder-white/30 rounded px-2 py-1.5 focus:ring-1 ring-indigo-500 outline-none";
+  const labelClass = "block text-xs font-medium text-white/70 mb-1";
 
   return (
     <div className="space-y-3">
@@ -38,7 +38,7 @@ export function AutomatedStepNodeForm({ nodeId, data }: Props) {
       <div>
         <label className={labelClass}>Action</label>
         {loading ? (
-          <div className="text-xs text-slate-400 animate-pulse">Loading actions...</div>
+          <div className="text-xs text-white/40 animate-pulse">Loading actions...</div>
         ) : (
           <select
             className={inputClass}
@@ -55,16 +55,19 @@ export function AutomatedStepNodeForm({ nodeId, data }: Props) {
 
       {/* Dynamic params — renders based on selected action */}
       {selectedAction && selectedAction.params.length > 0 && (
-        <div className="space-y-2">
-          <label className={labelClass}>Action Parameters</label>
+        <div className="space-y-2 mt-2 pt-2 border-t border-white/5">
+          <div className="flex items-center justify-between mb-2">
+            <label className="block text-xs font-medium text-white/70">Action Parameters</label>
+            <span className="text-[9px] text-fuchsia-400/80 font-mono bg-fuchsia-500/10 px-1.5 py-0.5 rounded" title="You can inject variables from the Start payload using {{ key }} syntax">Supports {'{{ var }}'}</span>
+          </div>
           {selectedAction.params.map(param => (
             <div key={param}>
-              <label className="text-[10px] text-slate-500 capitalize mb-0.5 block">{param}</label>
+              <label className="text-[10px] text-white/50 capitalize mb-0.5 block">{param}</label>
               <input
                 className={inputClass}
                 value={data.actionParams?.[param] ?? ''}
                 onChange={e => handleParamChange(param, e.target.value)}
-                placeholder={`Enter ${param}...`}
+                placeholder={`e.g. {{ employee.${param} }}`}
               />
             </div>
           ))}

@@ -17,9 +17,10 @@ export function AutomatedStepNode({ id, selected, data }: NodeProps<AutomatedSte
       icon={<Zap size={12} />}
       label="Automated Step"
       subtitle={d.title || 'System action'}
+      dark={true}
     >
       {d.actionId && (
-        <p className="text-[10px] text-slate-500 font-mono bg-slate-50 px-1.5 py-0.5 rounded">
+        <p className="text-[10px] text-white/50 font-mono bg-white/10 px-1.5 py-0.5 rounded border border-white/5">
           {d.actionId}
         </p>
       )}

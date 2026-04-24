@@ -53,8 +53,8 @@ export function ApprovalNodeForm({ nodeId, data }: Props) {
     });
   }, [watchedValues, nodeId, updateNodeData]);
 
-  const inputClass = "w-full text-xs border border-slate-200 rounded px-2 py-1.5 focus:ring-1 ring-indigo-400 outline-none";
-  const labelClass = "block text-xs font-medium text-slate-600 mb-1";
+  const inputClass = "w-full text-xs border border-white/10 bg-[#12121a] text-white placeholder-white/30 rounded px-2 py-1.5 focus:ring-1 ring-indigo-500 outline-none";
+  const labelClass = "block text-xs font-medium text-white/70 mb-1";
 
   return (
     <div className="space-y-3">
@@ -80,7 +80,7 @@ export function ApprovalNodeForm({ nodeId, data }: Props) {
           min={0} max={100}
           placeholder="0"
         />
-        <p className="text-[10px] text-slate-400 mt-0.5">Score above this triggers auto-approval. 0 = disabled.</p>
+        <p className="text-[10px] text-white/40 mt-0.5">Score above this triggers auto-approval. 0 = disabled.</p>
       </div>
     </div>
   );

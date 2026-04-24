@@ -12,24 +12,32 @@ import {
 import '@xyflow/react/dist/style.css';
 
 import { useWorkflowStore } from '../../store/workflowStore';
+import { AICopilot } from './AICopilot';
 import { StartNode } from '../nodes/StartNode';
 import { TaskNode } from '../nodes/TaskNode';
 import { ApprovalNode } from '../nodes/ApprovalNode';
 import { AutomatedStepNode } from '../nodes/AutomatedStepNode';
+import { SplitNode } from '../nodes/SplitNode';
+import { DelayNode } from '../nodes/DelayNode';
 import { EndNode } from '../nodes/EndNode';
 import { getDefaultNodeData } from '../../utils/nodeDefaults';
 import type { NodeType, WorkflowNode } from '../../types/workflow';
 
-// Register custom node types — must be defined outside component to avoid re-creation
 const nodeTypes = {
   startNode: StartNode,
   taskNode: TaskNode,
   approvalNode: ApprovalNode,
   automatedStepNode: AutomatedStepNode,
+  splitNode: SplitNode,
+  delayNode: DelayNode,
   endNode: EndNode,
 };
 
-export function WorkflowCanvas() {
+interface WorkflowCanvasProps {
+  dark?: boolean;
+}
+
+export function WorkflowCanvas({ dark }: WorkflowCanvasProps) {
   const {
     nodes, edges,
     setNodes, setEdges,
@@ -45,17 +53,13 @@ export function WorkflowCanvas() {
     [setEdges]
   );
 
-  // Handle drop from sidebar
   const onDrop = useCallback(
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
       const type = event.dataTransfer.getData('application/reactflow-type') as NodeType;
       if (!type) return;
 
-      const position = screenToFlowPosition({
-        x: event.clientX,
-        y: event.clientY,
-      });
+      const position = screenToFlowPosition({ x: event.clientX, y: event.clientY });
 
       const nodeId =
         typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
@@ -103,10 +107,15 @@ export function WorkflowCanvas() {
         fitViewOptions={{ padding: 0.2 }}
         defaultEdgeOptions={{
           animated: true,
-          style: { strokeWidth: 2, stroke: '#6366f1' },
+          style: { strokeWidth: 2, stroke: dark ? '#8b5cf6' : '#6366f1' },
         }}
+        style={dark ? { background: '#0f0f1a' } : undefined}
       >
-        <Background variant={BackgroundVariant.Dots} gap={16} color="#e2e8f0" />
+        <Background
+          variant={BackgroundVariant.Dots}
+          gap={16}
+          color={dark ? '#ffffff15' : '#e2e8f0'}
+        />
         <Controls className="!shadow-md" />
         <MiniMap
           nodeColor={(node) => {
@@ -115,12 +124,16 @@ export function WorkflowCanvas() {
               taskNode: '#3b82f6',
               approvalNode: '#f59e0b',
               automatedStepNode: '#8b5cf6',
+              splitNode: '#06b6d4',
+              delayNode: '#475569',
               endNode: '#f43f5e',
             };
             return colors[node.type ?? ''] ?? '#94a3b8';
           }}
+          style={dark ? { background: '#1a1a2e', borderColor: '#ffffff10' } : undefined}
           className="!rounded-xl !shadow-md"
         />
+        <AICopilot />
       </ReactFlow>
     </div>
   );

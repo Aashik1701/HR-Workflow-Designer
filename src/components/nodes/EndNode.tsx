@@ -18,9 +18,10 @@ export function EndNode({ id, selected, data }: NodeProps<EndFlowNode>) {
       label="End"
       subtitle={d.endMessage || 'Workflow complete'}
       showSourceHandle={false}
+      dark={true}
     >
       {d.summaryFlag && (
-        <span className="text-[10px] bg-rose-50 text-rose-600 px-1.5 py-0.5 rounded-full">
+        <span className="text-[10px] bg-rose-500/10 text-rose-400 border border-rose-500/20 px-1.5 py-0.5 rounded-full">
           Summary enabled
         </span>
       )}

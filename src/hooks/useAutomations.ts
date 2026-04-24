@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
-import { getAutomations } from '../api/workflowApi';
-import type { AutomationAction } from '../types/workflow';
+import { fetchAutomations } from '../api/automations';
+import type { AutomationRow } from '../lib/database.types';
 
 export function useAutomations() {
-  const [automations, setAutomations] = useState<AutomationAction[]>([]);
+  const [automations, setAutomations] = useState<AutomationRow[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getAutomations()
+    fetchAutomations()
       .then(setAutomations)
+      .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
 
   return { automations, loading };
 }
+

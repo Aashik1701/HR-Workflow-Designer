@@ -18,9 +18,10 @@ export function StartNode({ id, selected, data }: NodeProps<StartFlowNode>) {
       label="Start"
       subtitle={d.title || 'Workflow entry point'}
       showTargetHandle={false}
+      dark={true}
     >
       {d.metadata?.length > 0 && (
-        <p className="text-[10px] text-slate-400">
+        <p className="text-[10px] text-white/40">
           {d.metadata.length} metadata key(s)
         </p>
       )}

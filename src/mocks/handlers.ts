@@ -15,10 +15,109 @@ const AUTOMATIONS: AutomationAction[] = [
   { id: 'webhook', label: 'Trigger Webhook', params: ['url', 'method'] },
 ];
 
+function interpolate(text: string, context: Record<string, string>): string {
+  if (typeof text !== 'string') return text;
+  return text.replace(/\{\{\s*([a-zA-Z0-9_.-]+)\s*\}\}/g, (match, key) => {
+    return context[key] !== undefined ? context[key] : match;
+  });
+}
+
+type WorkflowMetadataEntry = {
+  key?: string;
+  value?: string;
+};
+
 export const handlers = [
   // GET /automations
   http.get('/api/automations', () => {
     return HttpResponse.json(AUTOMATIONS, { status: 200 });
+  }),
+
+  // POST /copilot/generate
+  http.post('/api/copilot/generate', async ({ request }) => {
+    const { prompt } = (await request.json()) as { prompt: string };
+    const p = prompt.toLowerCase();
+    
+    // Simulate AI thinking time
+    await new Promise((r) => setTimeout(r, 1500));
+
+    // Base Start Node
+    const nodes: WorkflowNode[] = [
+      {
+        id: 'node-start',
+        type: 'startNode',
+        position: { x: 250, y: 100 },
+        data: { type: 'startNode', title: 'Auto-Generated Entry', metadata: [] },
+      }
+    ];
+    const edges: WorkflowEdge[] = [];
+    let currentY = 250;
+    let prevNodeId = 'node-start';
+
+    // Parse Keywords
+    if (p.includes('email')) {
+      const id = 'node-email';
+      nodes.push({
+        id,
+        type: 'automatedStepNode',
+        position: { x: 250, y: currentY },
+        data: { type: 'automatedStepNode', title: 'Send Email', actionId: 'send_email', actionParams: { to: '{{ employee.email }}', subject: 'Welcome!' } }
+      });
+      edges.push({ id: `e-${prevNodeId}-${id}`, source: prevNodeId, target: id, type: 'smoothstep' });
+      prevNodeId = id;
+      currentY += 150;
+    }
+
+    if (p.includes('jira') || p.includes('ticket')) {
+      const id = 'node-jira';
+      nodes.push({
+        id,
+        type: 'automatedStepNode',
+        position: { x: 250, y: currentY },
+        data: { type: 'automatedStepNode', title: 'Create Ticket', actionId: 'create_ticket', actionParams: { project: 'IT', summary: 'Onboarding setup' } }
+      });
+      edges.push({ id: `e-${prevNodeId}-${id}`, source: prevNodeId, target: id, type: 'smoothstep' });
+      prevNodeId = id;
+      currentY += 150;
+    }
+
+    if (p.includes('slack') || p.includes('message')) {
+      const id = 'node-slack';
+      nodes.push({
+        id,
+        type: 'automatedStepNode',
+        position: { x: 250, y: currentY },
+        data: { type: 'automatedStepNode', title: 'Slack Notify', actionId: 'send_slack', actionParams: { channel: '#general', message: 'New hire!' } }
+      });
+      edges.push({ id: `e-${prevNodeId}-${id}`, source: prevNodeId, target: id, type: 'smoothstep' });
+      prevNodeId = id;
+      currentY += 150;
+    }
+
+    if (p.includes('task') || p.includes('assign')) {
+      const id = 'node-task';
+      nodes.push({
+        id,
+        type: 'taskNode',
+        position: { x: 250, y: currentY },
+        data: { type: 'taskNode', title: 'Manual Task', description: 'Review details', assignee: '{{ hr.manager }}', dueDate: '', customFields: [] }
+      });
+      edges.push({ id: `e-${prevNodeId}-${id}`, source: prevNodeId, target: id, type: 'smoothstep' });
+      prevNodeId = id;
+      currentY += 150;
+    }
+
+    // Always add an End Node
+    const endId = 'node-end';
+    nodes.push({
+      id: endId,
+      type: 'endNode',
+      position: { x: 250, y: currentY },
+      data: { type: 'endNode', endMessage: 'Generated Pipeline Complete', summaryFlag: false }
+    });
+    edges.push({ id: `e-${prevNodeId}-${endId}`, source: prevNodeId, target: endId, type: 'smoothstep' });
+
+    return HttpResponse.json({ nodes, edges }, { status: 200 });
   }),
 
   // POST /simulate
@@ -30,16 +129,46 @@ export const handlers = [
     await new Promise((r) => setTimeout(r, 800));
 
     const executionOrder = getExecutionOrder(nodes, edges);
+    
+    // Context dictionary for variable interpolation
+    const context: Record<string, string> = {};
 
     const steps = executionOrder.map((node, index: number) => {
       const nodeType = node.type ?? node.data.type;
+      let stepMessage = getStepMessage(nodeType, node);
+
+      // Extract initial variables from start node
+      if (nodeType === 'startNode' && Array.isArray(node.data.metadata)) {
+        node.data.metadata.forEach((kv) => {
+          const metadata = kv as WorkflowMetadataEntry;
+          if (metadata.key && metadata.value) {
+            context[metadata.key] = metadata.value;
+          }
+        });
+      }
+
+      // Interpolate automated step parameters
+      if (nodeType === 'automatedStepNode' && node.data.actionParams) {
+        const actionParams = node.data.actionParams as Record<string, string>;
+        const interpolatedParams = Object.entries(actionParams)
+          .map(([key, val]) => `${key}: "${interpolate(val, context)}"`)
+          .join(', ');
+        
+        stepMessage = `Executed Action: { ${interpolatedParams} }`;
+      }
+
+      // Interpolate task descriptions/assignees
+      if (nodeType === 'taskNode') {
+        const assignee = interpolate((node.data.assignee as string) ?? '', context);
+        stepMessage = `Task assigned to ${assignee || 'unassigned'} and queued`;
+      }
 
       return {
         nodeId: node.id,
         nodeType,
         nodeTitle: getNodeTitle(node),
         status: 'success' as const,
-        message: getStepMessage(nodeType),
+        message: stepMessage,
         timestamp: new Date(Date.now() + index * 500).toISOString(),
         durationMs: Math.floor(Math.random() * 400) + 100,
       };
@@ -59,46 +188,50 @@ export const handlers = [
 
 function getExecutionOrder(nodes: WorkflowNode[], edges: WorkflowEdge[]): WorkflowNode[] {
   const nodeById = new Map<string, WorkflowNode>();
-  const adjacency = new Map<string, string[]>();
-  const indegree = new Map<string, number>();
+  const outgoingEdges = new Map<string, WorkflowEdge[]>();
 
   nodes.forEach((node) => {
     nodeById.set(node.id, node);
-    adjacency.set(node.id, []);
-    indegree.set(node.id, 0);
+    outgoingEdges.set(node.id, []);
   });
 
   edges.forEach((edge) => {
-    if (!nodeById.has(edge.source) || !nodeById.has(edge.target)) return;
-    adjacency.get(edge.source)?.push(edge.target);
-    indegree.set(edge.target, (indegree.get(edge.target) ?? 0) + 1);
+    outgoingEdges.get(edge.source)?.push(edge);
   });
 
-  const queue: string[] = nodes
-    .map((node) => node.id)
-    .filter((nodeId) => (indegree.get(nodeId) ?? 0) === 0);
+  const startNode = nodes.find(n => n.type === 'startNode') ?? nodes[0];
+  if (!startNode) return [];
 
   const orderedIds: string[] = [];
+  const queue: string[] = [startNode.id];
+  const visited = new Set<string>();
 
   while (queue.length > 0) {
     const currentId = queue.shift();
     if (!currentId) break;
-
+    if (visited.has(currentId)) continue;
+    
+    visited.add(currentId);
     orderedIds.push(currentId);
 
-    for (const neighbor of adjacency.get(currentId) ?? []) {
-      const nextIndegree = (indegree.get(neighbor) ?? 1) - 1;
-      indegree.set(neighbor, nextIndegree);
-      if (nextIndegree === 0) {
-        queue.push(neighbor);
-      }
-    }
-  }
+    const currentNode = nodeById.get(currentId);
+    const edgesFromHere = outgoingEdges.get(currentId) ?? [];
 
-  if (orderedIds.length < nodes.length) {
-    for (const node of nodes) {
-      if (!orderedIds.includes(node.id)) {
-        orderedIds.push(node.id);
+    if (currentNode?.type === 'splitNode') {
+      // Simulate A/B test routing by randomly picking Path A or Path B
+      const isPathA = Math.random() > 0.5;
+      const targetHandle = isPathA ? 'pathA' : 'pathB';
+      const selectedEdge = edgesFromHere.find(e => e.sourceHandle === targetHandle) ?? edgesFromHere[0];
+      
+      if (selectedEdge && !visited.has(selectedEdge.target)) {
+        queue.push(selectedEdge.target);
+      }
+    } else {
+      // Normal routing: enqueue all targets
+      for (const edge of edgesFromHere) {
+        if (!visited.has(edge.target)) {
+          queue.push(edge.target);
+        }
       }
     }
   }
@@ -122,13 +255,23 @@ function getNodeTitle(node: WorkflowNode): string {
   return node.type ?? node.id;
 }
 
-function getStepMessage(nodeType: NodeType): string {
-  const messages: Record<NodeType, string> = {
-    startNode: 'Workflow initiated successfully',
-    taskNode: 'Task assigned and queued for completion',
-    approvalNode: 'Approval request sent to designated approver',
-    automatedStepNode: 'Automated action triggered and executed',
-    endNode: 'Workflow completed. Summary generated.',
+function getStepMessage(nodeType: NodeType, node?: WorkflowNode): string {
+  if (nodeType === 'delayNode') {
+    const duration = node?.data?.duration ?? 1;
+    const unit = node?.data?.unit ?? 'days';
+    return `Execution paused for ${duration} ${unit}.`;
+  }
+  
+  if (nodeType === 'splitNode') {
+    return 'Traffic routed down selected A/B test path.';
+  }
+
+  const messages: Record<string, string> = {
+    startNode: 'Payload initialized with provided metadata variables.',
+    taskNode: 'Task assigned and queued for completion.',
+    approvalNode: 'Approval request routed to designated approver.',
+    automatedStepNode: 'Automated action triggered.',
+    endNode: 'Workflow completed. Pipeline summary generated.',
   };
-  return messages[nodeType] ?? 'Step executed';
+  return messages[nodeType as string] ?? 'Step executed';
 }

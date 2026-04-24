@@ -30,6 +30,11 @@ interface WorkflowStore {
   // Graph operations
   clearWorkflow: () => void;
   importWorkflow: (nodes: WorkflowNode[], edges: WorkflowEdge[]) => void;
+
+  // Playback
+  playbackNodeId: string | null;
+  playbackStatus: 'running' | 'success' | 'error' | null;
+  setPlaybackState: (id: string | null, status: 'running' | 'success' | 'error' | null) => void;
 }
 
 export const useWorkflowStore = create<WorkflowStore>((set, get) => ({
@@ -60,7 +65,11 @@ export const useWorkflowStore = create<WorkflowStore>((set, get) => ({
       ),
     }),
 
-  clearWorkflow: () => set({ nodes: [], edges: [], selectedNodeId: null }),
+  clearWorkflow: () => set({ nodes: [], edges: [], selectedNodeId: null, playbackNodeId: null, playbackStatus: null }),
 
-  importWorkflow: (nodes, edges) => set({ nodes, edges, selectedNodeId: null }),
+  importWorkflow: (nodes, edges) => set({ nodes, edges, selectedNodeId: null, playbackNodeId: null, playbackStatus: null }),
+
+  playbackNodeId: null,
+  playbackStatus: null,
+  setPlaybackState: (id, status) => set({ playbackNodeId: id, playbackStatus: status }),
 }));

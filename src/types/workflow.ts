@@ -7,6 +7,8 @@ export type NodeType =
   | 'taskNode'
   | 'approvalNode'
   | 'automatedStepNode'
+  | 'splitNode'
+  | 'delayNode'
   | 'endNode';
 
 export interface KeyValuePair {
@@ -61,6 +63,27 @@ export interface AutomatedStepNodeData {
   errorMessage?: string;
 }
 
+export interface SplitNodeData {
+  [key: string]: unknown;
+  type: 'splitNode';
+  title: string;
+  pathALabel: string;
+  pathBLabel: string;
+  splitPercentage: number;
+  hasError?: boolean;
+  errorMessage?: string;
+}
+
+export interface DelayNodeData {
+  [key: string]: unknown;
+  type: 'delayNode';
+  title: string;
+  duration: number;
+  unit: 'minutes' | 'hours' | 'days';
+  hasError?: boolean;
+  errorMessage?: string;
+}
+
 export interface EndNodeData {
   [key: string]: unknown;
   type: 'endNode';
@@ -75,6 +98,8 @@ export type WorkflowNodeData =
   | TaskNodeData
   | ApprovalNodeData
   | AutomatedStepNodeData
+  | SplitNodeData
+  | DelayNodeData
   | EndNodeData;
 
 export type WorkflowNode = Node<WorkflowNodeData, NodeType>;

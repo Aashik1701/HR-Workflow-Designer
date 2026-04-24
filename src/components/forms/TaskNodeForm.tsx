@@ -60,9 +60,9 @@ export function TaskNodeForm({ nodeId, data }: Props) {
     });
   }, [watchedValues, nodeId, updateNodeData]);
 
-  const inputClass = "w-full text-xs border border-slate-200 rounded px-2 py-1.5 focus:ring-1 ring-indigo-400 outline-none";
+  const inputClass = "w-full text-xs border border-white/10 bg-[#12121a] text-white placeholder-white/30 rounded px-2 py-1.5 focus:ring-1 ring-indigo-500 outline-none";
   const errorClass = "text-[10px] text-red-500 mt-0.5";
-  const labelClass = "block text-xs font-medium text-slate-600 mb-1";
+  const labelClass = "block text-xs font-medium text-white/70 mb-1";
 
   return (
     <div className="space-y-3">
@@ -76,8 +76,11 @@ export function TaskNodeForm({ nodeId, data }: Props) {
         <textarea {...register('description')} rows={2} className={inputClass} placeholder="Task description..." />
       </div>
       <div>
-        <label className={labelClass}>Assignee</label>
-        <input {...register('assignee')} className={inputClass} placeholder="e.g., hr-team@company.com" />
+        <div className="flex items-center justify-between mb-1">
+          <label className="block text-xs font-medium text-white/70">Assignee</label>
+          <span className="text-[9px] text-fuchsia-400/80 font-mono bg-fuchsia-500/10 px-1.5 py-0.5 rounded" title="You can inject variables from the Start payload using {{ key }} syntax">Supports {'{{ var }}'}</span>
+        </div>
+        <input {...register('assignee')} className={inputClass} placeholder="e.g., {{ employee.managerEmail }}" />
       </div>
       <div>
         <label className={labelClass}>Due Date</label>

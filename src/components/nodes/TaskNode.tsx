@@ -17,15 +17,16 @@ export function TaskNode({ id, selected, data }: NodeProps<TaskFlowNode>) {
       icon={<ClipboardList size={12} />}
       label="Task"
       subtitle={d.title || 'Human task'}
+      dark={true}
     >
       <div className="space-y-1">
         {d.assignee && (
-          <div className="flex items-center gap-1 text-[10px] text-slate-500">
+          <div className="flex items-center gap-1 text-[10px] text-white/50">
             <User size={9} /> <span className="truncate">{d.assignee}</span>
           </div>
         )}
         {d.dueDate && (
-          <div className="flex items-center gap-1 text-[10px] text-slate-500">
+          <div className="flex items-center gap-1 text-[10px] text-white/50">
             <Calendar size={9} /> <span>{d.dueDate}</span>
           </div>
         )}

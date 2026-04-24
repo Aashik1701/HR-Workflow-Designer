@@ -17,15 +17,16 @@ export function ApprovalNode({ id, selected, data }: NodeProps<ApprovalFlowNode>
       icon={<CheckCircle2 size={12} />}
       label="Approval"
       subtitle={d.title || 'Requires approval'}
+      dark={true}
     >
       <div className="space-y-1">
         {d.approverRole && (
-          <div className="flex items-center gap-1 text-[10px] text-slate-500">
+          <div className="flex items-center gap-1 text-[10px] text-white/50">
             <ShieldCheck size={9} /> <span>{d.approverRole}</span>
           </div>
         )}
         {d.autoApproveThreshold > 0 && (
-          <p className="text-[10px] text-slate-400">
+          <p className="text-[10px] text-white/40">
             Auto-approve &gt; {d.autoApproveThreshold}
           </p>
         )}

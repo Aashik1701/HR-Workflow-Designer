@@ -6,8 +6,8 @@ interface Props { nodeId: string; data: EndNodeData; }
 export function EndNodeForm({ nodeId, data }: Props) {
   const { updateNodeData } = useWorkflowStore();
 
-  const inputClass = "w-full text-xs border border-slate-200 rounded px-2 py-1.5 focus:ring-1 ring-indigo-400 outline-none";
-  const labelClass = "block text-xs font-medium text-slate-600 mb-1";
+  const inputClass = "w-full text-xs border border-white/10 bg-[#12121a] text-white placeholder-white/30 rounded px-2 py-1.5 focus:ring-1 ring-indigo-500 outline-none";
+  const labelClass = "block text-xs font-medium text-white/70 mb-1";
 
   return (
     <div className="space-y-3">
@@ -28,7 +28,7 @@ export function EndNodeForm({ nodeId, data }: Props) {
           onChange={e => updateNodeData(nodeId, { ...data, summaryFlag: e.target.checked })}
           className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-400"
         />
-        <label htmlFor="summaryFlag" className="text-xs text-slate-600">
+        <label htmlFor="summaryFlag" className="text-xs text-white/60">
           Generate summary on completion
         </label>
       </div>
