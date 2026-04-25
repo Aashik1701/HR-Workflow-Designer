@@ -9,7 +9,12 @@ export type NodeType =
   | 'automatedStepNode'
   | 'splitNode'
   | 'delayNode'
-  | 'endNode';
+  | 'endNode'
+  | 'webhookNode'
+  | 'aiActionNode'
+  | 'forkNode'
+  | 'loopNode'
+  | 'documentGenNode';
 
 export interface KeyValuePair {
   key: string;
@@ -96,6 +101,70 @@ export interface EndNodeData {
   errorMessage?: string;
 }
 
+// ─── New Node Data Types ─────────────────────────────────────────────────
+
+export interface WebhookNodeData {
+  [key: string]: unknown;
+  type: 'webhookNode';
+  title: string;
+  webhookUrl: string;
+  httpMethod: 'GET' | 'POST' | 'PUT';
+  payloadSchema: KeyValuePair[];
+  authType: 'none' | 'bearer' | 'apiKey';
+  authToken: string;
+  hasError?: boolean;
+  errorMessage?: string;
+}
+
+export interface AIActionNodeData {
+  [key: string]: unknown;
+  type: 'aiActionNode';
+  title: string;
+  model: 'gpt-4o' | 'gpt-4o-mini' | 'claude-sonnet' | 'gemini-pro';
+  prompt: string;
+  inputVariables: string[];
+  outputVariable: string;
+  temperature: number;
+  hasError?: boolean;
+  errorMessage?: string;
+}
+
+export interface ForkNodeData {
+  [key: string]: unknown;
+  type: 'forkNode';
+  title: string;
+  mode: 'fork' | 'join';
+  branches: number;
+  branchLabels: string[];
+  hasError?: boolean;
+  errorMessage?: string;
+}
+
+export interface LoopNodeData {
+  [key: string]: unknown;
+  type: 'loopNode';
+  title: string;
+  iteratorSource: string;
+  maxIterations: number;
+  currentItemVariable: string;
+  hasError?: boolean;
+  errorMessage?: string;
+}
+
+export interface DocumentGenNodeData {
+  [key: string]: unknown;
+  type: 'documentGenNode';
+  title: string;
+  templateId: string;
+  customTemplateUrl?: string;
+  outputFileName: string;
+  outputFormat: 'PDF' | 'DOCX' | 'HTML';
+  mergeFields: KeyValuePair[];
+  outputVariable: string;
+  hasError?: boolean;
+  errorMessage?: string;
+}
+
 export type WorkflowNodeData =
   | StartNodeData
   | TaskNodeData
@@ -103,7 +172,12 @@ export type WorkflowNodeData =
   | AutomatedStepNodeData
   | SplitNodeData
   | DelayNodeData
-  | EndNodeData;
+  | EndNodeData
+  | WebhookNodeData
+  | AIActionNodeData
+  | ForkNodeData
+  | LoopNodeData
+  | DocumentGenNodeData;
 
 export type WorkflowNode = Node<WorkflowNodeData, NodeType>;
 export type WorkflowEdge = Edge;

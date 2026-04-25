@@ -117,6 +117,83 @@ Both paths MUST eventually connect to the end node.
   }
 }
 
+### 8. webhookNode (alternative to startNode for external triggers)
+{
+  "id": "webhook-1",
+  "type": "webhookNode",
+  "position": { "x": 250, "y": 80 },
+  "data": {
+    "type": "webhookNode",
+    "title": "Webhook Trigger",
+    "webhookUrl": "/api/webhook/xyz123",
+    "httpMethod": "POST",
+    "payloadSchema": [{ "key": "data", "value": "string" }],
+    "authType": "none",
+    "authToken": ""
+  }
+}
+
+### 9. aiActionNode (LLM processing step)
+{
+  "id": "ai-1",
+  "type": "aiActionNode",
+  "position": { "x": 250, "y": <y> },
+  "data": {
+    "type": "aiActionNode",
+    "title": "AI Summary",
+    "model": "gpt-4o",
+    "prompt": "Summarize the data.",
+    "inputVariables": ["data"],
+    "outputVariable": "summary",
+    "temperature": 0.7
+  }
+}
+
+### 10. forkNode (Parallel execution)
+{
+  "id": "fork-1",
+  "type": "forkNode",
+  "position": { "x": 250, "y": <y> },
+  "data": {
+    "type": "forkNode",
+    "title": "Parallel Paths",
+    "mode": "fork",
+    "branches": 2,
+    "branchLabels": ["Branch A", "Branch B"]
+  }
+}
+Note: Connect outgoing edges from fork using sourceHandles "branch-0" and "branch-1". To join them back, use a forkNode with mode "join" and identical "branches" count.
+
+### 11. loopNode (Iterate over items)
+{
+  "id": "loop-1",
+  "type": "loopNode",
+  "position": { "x": 250, "y": <y> },
+  "data": {
+    "type": "loopNode",
+    "title": "Iterate",
+    "iteratorSource": "list",
+    "maxIterations": 100,
+    "currentItemVariable": "item"
+  }
+}
+
+### 12. documentGenNode (Generate PDF/DOCX from template)
+{
+  "id": "docgen-1",
+  "type": "documentGenNode",
+  "position": { "x": 250, "y": <y> },
+  "data": {
+    "type": "documentGenNode",
+    "title": "Generate Offer",
+    "templateId": "offer_letter",
+    "outputFileName": "offer.pdf",
+    "outputFormat": "PDF",
+    "mergeFields": [{ "key": "name", "value": "{{ candidate_name }}" }],
+    "outputVariable": "generated_doc"
+  }
+}
+
 ## Edge Rules
 - id: "e-<source>-<target>"
 - source: node id
@@ -265,14 +342,24 @@ export async function generateWorkflowFromPrompt(prompt: string): Promise<Copilo
 function keywordFallback(prompt: string): CopilotResult {
   const p = prompt.toLowerCase();
 
-  const nodes: WorkflowNode[] = [
-    {
+  const isWebhook = p.includes('webhook') || p.includes('api') || p.includes('trigger') || p.includes('ats');
+
+  const nodes: WorkflowNode[] = [];
+  if (isWebhook) {
+    nodes.push({
+      id: 'node-start',
+      type: 'webhookNode',
+      position: { x: 250, y: 80 },
+      data: { type: 'webhookNode', title: 'Webhook Trigger', webhookUrl: '/api/webhook/test', httpMethod: 'POST', payloadSchema: [{ key: 'data', value: 'string' }], authType: 'none', authToken: '' },
+    });
+  } else {
+    nodes.push({
       id: 'node-start',
       type: 'startNode',
       position: { x: 250, y: 80 },
       data: { type: 'startNode', title: 'Trigger', metadata: [] },
-    },
-  ];
+    });
+  }
   const edges: WorkflowEdge[] = [];
   let currentY = 240;
   let prev = 'node-start';
@@ -309,12 +396,44 @@ function keywordFallback(prompt: string): CopilotResult {
     push('node-ticket', { type: 'automatedStepNode', title: 'Create Jira Ticket', actionId: 'create_ticket', actionParams: { project: 'IT', summary: 'Onboarding: {{ employee.name }}', priority: 'Medium' } }, 'automatedStepNode');
   }
 
-  if (p.includes('document') || p.includes('contract') || p.includes('letter')) {
-    push('node-doc', { type: 'automatedStepNode', title: 'Generate Document', actionId: 'generate_doc', actionParams: { template: 'offer_letter', recipient: '{{ employee.email }}' } }, 'automatedStepNode');
+  if (p.includes('ai') || p.includes('summarize') || p.includes('llm')) {
+    push('node-ai', { type: 'aiActionNode', title: 'AI Summary', model: 'gpt-4o', prompt: 'Summarize the input data.', inputVariables: ['data'], outputVariable: 'summary', temperature: 0.7 }, 'aiActionNode');
+  }
+
+  if (p.includes('document') || p.includes('contract') || p.includes('letter') || p.includes('pdf')) {
+    push('node-docgen', { type: 'documentGenNode', title: 'Generate Document', templateId: 'offer_letter', outputFileName: 'document.pdf', outputFormat: 'PDF', mergeFields: [], outputVariable: 'doc' }, 'documentGenNode');
+  }
+
+  if (p.includes('loop') || p.includes('iterate') || p.includes('for each') || p.includes('every')) {
+    push('node-loop', { type: 'loopNode', title: 'Loop Items', iteratorSource: 'items', maxIterations: 100, currentItemVariable: 'item' }, 'loopNode');
   }
 
   if (p.includes('meeting') || p.includes('schedule') || p.includes('calendar')) {
     push('node-meeting', { type: 'automatedStepNode', title: 'Schedule Meeting', actionId: 'schedule_meeting', actionParams: { attendees: '{{ employee.email }}, {{ hr.manager }}', title: 'Welcome Call', duration: '30' } }, 'automatedStepNode');
+  }
+
+  if (p.includes('fork') || p.includes('parallel') || p.includes('branch')) {
+    const forkId = 'node-fork';
+    const pathAId = 'node-forkA';
+    const pathBId = 'node-forkB';
+    const joinId = 'node-join';
+    nodes.push({ id: forkId, type: 'forkNode', position: { x: 250, y: currentY }, data: { type: 'forkNode', title: 'Parallel Paths', mode: 'fork', branches: 2, branchLabels: ['IT', 'Facilities'] } });
+    edges.push({ id: `e-${prev}-${forkId}`, source: prev, target: forkId, type: 'smoothstep' });
+    currentY += 160;
+
+    nodes.push({ id: pathAId, type: 'taskNode', position: { x: 100, y: currentY }, data: { type: 'taskNode', title: 'IT Setup', description: 'Provision laptop', assignee: 'IT Support', dueDate: '', customFields: [] } });
+    edges.push({ id: `e-${forkId}-${pathAId}`, source: forkId, target: pathAId, type: 'smoothstep', sourceHandle: 'branch-0' } as WorkflowEdge);
+
+    nodes.push({ id: pathBId, type: 'automatedStepNode', position: { x: 400, y: currentY }, data: { type: 'automatedStepNode', title: 'Ping Facilities', actionId: 'send_slack', actionParams: { channel: '#facilities', message: 'Set up desk' } } });
+    edges.push({ id: `e-${forkId}-${pathBId}`, source: forkId, target: pathBId, type: 'smoothstep', sourceHandle: 'branch-1' } as WorkflowEdge);
+
+    currentY += 160;
+    nodes.push({ id: joinId, type: 'forkNode', position: { x: 250, y: currentY }, data: { type: 'forkNode', title: 'Wait Both', mode: 'join', branches: 2, branchLabels: [] } });
+    edges.push({ id: `e-${pathAId}-${joinId}`, source: pathAId, target: joinId, type: 'smoothstep' });
+    edges.push({ id: `e-${pathBId}-${joinId}`, source: pathBId, target: joinId, type: 'smoothstep' });
+    
+    prev = joinId;
+    currentY += 160;
   }
 
   if (p.includes('split') || p.includes('a/b') || p.includes('test')) {

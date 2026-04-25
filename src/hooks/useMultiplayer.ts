@@ -48,6 +48,7 @@ export function useMultiplayer(workflowId: string | undefined) {
         presence: {
           key: me.id,
         },
+        broadcast: { ack: false },
       },
     });
 
@@ -77,6 +78,34 @@ export function useMultiplayer(workflowId: string | undefined) {
               }));
             }
           })
+          .on('broadcast', { event: 'viewport_move' }, ({ payload }) => {
+            if (payload.id !== me.id) {
+              useMultiplayerStore.getState().setViewports(prev => ({
+                ...prev,
+                [payload.id]: { x: payload.x, y: payload.y, zoom: payload.zoom }
+              }));
+            }
+          })
+          .on('broadcast', { event: 'ping' }, ({ payload }) => {
+            if (payload.id !== me.id) {
+              useMultiplayerStore.getState().addPing(payload.ping);
+            }
+          })
+          .on('broadcast', { event: 'comment_thread' }, ({ payload }) => {
+            if (payload.id !== me.id) {
+              useMultiplayerStore.getState().addCommentThread(payload.thread);
+            }
+          })
+          .on('broadcast', { event: 'comment_message' }, ({ payload }) => {
+            if (payload.id !== me.id) {
+              useMultiplayerStore.getState().addCommentMessage(payload.threadId, payload.message);
+            }
+          })
+          .on('broadcast', { event: 'comment_resolve' }, ({ payload }) => {
+            if (payload.id !== me.id) {
+              useMultiplayerStore.getState().resolveCommentThread(payload.threadId);
+            }
+          })
           .subscribe(async (status) => {
             if (status === 'SUBSCRIBED') {
               await channel.track({
@@ -95,6 +124,7 @@ export function useMultiplayer(workflowId: string | undefined) {
       channelRef.current = null;
       setCollaborators({});
       setCursors({});
+      // Don't reset viewports/comments immediately to prevent jarring flashes on HMR
     };
   }, [workflowId, setCollaborators, setCursors, removeCursor]);
 
@@ -113,16 +143,67 @@ export function useMultiplayer(workflowId: string | undefined) {
       channelRef.current.send({
         type: 'broadcast',
         event: 'cursor_move',
-        payload: {
-          id: me.id,
-          x,
-          y
-        }
+        payload: { id: me.id, x, y }
+      });
+    }
+  }, []);
+
+  const broadcastViewport = useCallback((x: number, y: number, zoom: number) => {
+    if (channelRef.current && channelRef.current.state === 'joined') {
+      channelRef.current.send({
+        type: 'broadcast',
+        event: 'viewport_move',
+        payload: { id: me.id, x, y, zoom }
+      });
+    }
+  }, []);
+
+  const broadcastPing = useCallback((ping: any) => {
+    if (channelRef.current && channelRef.current.state === 'joined') {
+      channelRef.current.send({
+        type: 'broadcast',
+        event: 'ping',
+        payload: { id: me.id, ping }
+      });
+    }
+  }, []);
+
+  const broadcastCommentThread = useCallback((thread: any) => {
+    if (channelRef.current && channelRef.current.state === 'joined') {
+      channelRef.current.send({
+        type: 'broadcast',
+        event: 'comment_thread',
+        payload: { id: me.id, thread }
+      });
+    }
+  }, []);
+
+  const broadcastCommentMessage = useCallback((threadId: string, message: any) => {
+    if (channelRef.current && channelRef.current.state === 'joined') {
+      channelRef.current.send({
+        type: 'broadcast',
+        event: 'comment_message',
+        payload: { id: me.id, threadId, message }
+      });
+    }
+  }, []);
+
+  const broadcastCommentResolve = useCallback((threadId: string) => {
+    if (channelRef.current && channelRef.current.state === 'joined') {
+      channelRef.current.send({
+        type: 'broadcast',
+        event: 'comment_resolve',
+        payload: { id: me.id, threadId }
       });
     }
   }, []);
 
   return {
-    broadcastCursor
+    broadcastCursor,
+    broadcastViewport,
+    broadcastPing,
+    broadcastCommentThread,
+    broadcastCommentMessage,
+    broadcastCommentResolve
   };
 }

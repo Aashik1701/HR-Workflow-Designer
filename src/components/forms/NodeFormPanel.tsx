@@ -6,6 +6,11 @@ import { AutomatedStepNodeForm } from './AutomatedStepNodeForm';
 import { SplitNodeForm } from './SplitNodeForm';
 import { DelayNodeForm } from './DelayNodeForm';
 import { EndNodeForm } from './EndNodeForm';
+import { WebhookNodeForm } from './WebhookNodeForm';
+import { AIActionNodeForm } from './AIActionNodeForm';
+import { ForkNodeForm } from './ForkNodeForm';
+import { LoopNodeForm } from './LoopNodeForm';
+import { DocumentGenNodeForm } from './DocumentGenNodeForm';
 import { SlidersHorizontal } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -34,6 +39,11 @@ export function NodeFormPanel({ dark }: NodeFormPanelProps) {
     splitNode:         <SplitNodeForm nodeId={node.id} data={node.data as never} />,
     delayNode:         <DelayNodeForm nodeId={node.id} data={node.data as never} />,
     endNode:           <EndNodeForm nodeId={node.id} data={node.data as never} />,
+    webhookNode:       <WebhookNodeForm nodeId={node.id} data={node.data as never} />,
+    aiActionNode:      <AIActionNodeForm nodeId={node.id} data={node.data as never} />,
+    forkNode:          <ForkNodeForm nodeId={node.id} data={node.data as never} />,
+    loopNode:          <LoopNodeForm nodeId={node.id} data={node.data as never} />,
+    documentGenNode:   <DocumentGenNodeForm nodeId={node.id} data={node.data as never} />,
   };
 
   return (

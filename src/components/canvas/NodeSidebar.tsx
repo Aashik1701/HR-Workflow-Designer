@@ -1,4 +1,4 @@
-import { Play, ClipboardList, CheckCircle2, Zap, Flag, GitBranch, Clock } from 'lucide-react';
+import { Play, ClipboardList, CheckCircle2, Zap, Flag, GitBranch, Clock, Webhook, Sparkles, GitFork, Repeat, FileText } from 'lucide-react';
 import type { NodeType } from '../../types/workflow';
 import clsx from 'clsx';
 
@@ -11,13 +11,18 @@ interface NodePaletteItem {
 }
 
 const PALETTE: NodePaletteItem[] = [
-  { type: 'startNode',          label: 'Start',          description: 'Entry point',         icon: <Play size={14} />,           color: 'bg-emerald-500' },
-  { type: 'taskNode',           label: 'Task',           description: 'Human task',           icon: <ClipboardList size={14} />,  color: 'bg-blue-500' },
+  { type: 'startNode',          label: 'Start',          description: 'Entry point',          icon: <Play size={14} />,           color: 'bg-emerald-500' },
+  { type: 'webhookNode',        label: 'Webhook',        description: 'External trigger',     icon: <Webhook size={14} />,        color: 'bg-orange-500' },
+  { type: 'taskNode',           label: 'Task',           description: 'Human task',           icon: <ClipboardList size={14} />,   color: 'bg-blue-500' },
   { type: 'approvalNode',       label: 'Approval',       description: 'Approval step',        icon: <CheckCircle2 size={14} />,   color: 'bg-amber-500' },
   { type: 'automatedStepNode',  label: 'Automated Step', description: 'System action',        icon: <Zap size={14} />,            color: 'bg-purple-500' },
+  { type: 'aiActionNode',       label: 'AI Action',      description: 'LLM processing',       icon: <Sparkles size={14} />,       color: 'bg-violet-500' },
   { type: 'splitNode',          label: 'Split Flow',     description: 'A/B routing',          icon: <GitBranch size={14} />,      color: 'bg-cyan-500' },
+  { type: 'forkNode',           label: 'Fork / Join',    description: 'Parallel execution',   icon: <GitFork size={14} />,        color: 'bg-pink-500' },
+  { type: 'loopNode',           label: 'Loop',           description: 'Iterate over list',    icon: <Repeat size={14} />,         color: 'bg-yellow-500' },
+  { type: 'documentGenNode',    label: 'Document Gen',   description: 'Create documents',     icon: <FileText size={14} />,       color: 'bg-cyan-500' },
   { type: 'delayNode',          label: 'Wait',           description: 'Time delay',           icon: <Clock size={14} />,          color: 'bg-slate-500' },
-  { type: 'endNode',            label: 'End',            description: 'Workflow completion',  icon: <Flag size={14} />,           color: 'bg-rose-500' },
+  { type: 'endNode',            label: 'End',            description: 'Workflow completion',   icon: <Flag size={14} />,           color: 'bg-rose-500' },
 ];
 
 interface NodeSidebarProps {
