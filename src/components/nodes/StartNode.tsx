@@ -13,17 +13,22 @@ export function StartNode({ id, selected, data }: NodeProps<StartFlowNode>) {
       selected={!!selected}
       hasError={d.hasError}
       errorMessage={d.errorMessage}
-      accentColor="bg-emerald-500"
-      icon={<Play size={12} />}
-      label="Start"
-      subtitle={d.title || 'Workflow entry point'}
+      accentGradient="from-emerald-400 to-teal-500"
+      accentText="text-emerald-300"
+      accentPill="bg-emerald-500/15 border border-emerald-500/20"
+      bgGradient="bg-gradient-to-br from-emerald-500/10 to-[#181828]"
+      borderGlow="border border-emerald-500/20"
+      icon={<Play size={13} />}
+      label={d.title || 'Start'}
+      typeLabel="Trigger"
+      subtitle={d.triggerType ? `on: ${d.triggerType}` : 'Workflow entry point'}
       showTargetHandle={false}
-      dark={true}
     >
       {d.metadata?.length > 0 && (
-        <p className="text-[10px] text-white/40">
-          {d.metadata.length} metadata key(s)
-        </p>
+        <div className="flex items-center gap-1.5">
+          <div className="w-1.5 h-1.5 rounded-full bg-emerald-400/60" />
+          <p className="text-[10px] text-white/40">{d.metadata.length} metadata key{d.metadata.length > 1 ? 's' : ''}</p>
+        </div>
       )}
     </BaseNode>
   );

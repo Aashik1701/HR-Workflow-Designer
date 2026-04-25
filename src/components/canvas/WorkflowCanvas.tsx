@@ -109,12 +109,13 @@ export function WorkflowCanvas({ dark }: WorkflowCanvasProps) {
           animated: true,
           style: { strokeWidth: 2, stroke: dark ? '#8b5cf6' : '#6366f1' },
         }}
-        style={dark ? { background: '#0f0f1a' } : undefined}
+        style={dark ? { background: '#06061a' } : undefined}
       >
         <Background
           variant={BackgroundVariant.Dots}
-          gap={16}
-          color={dark ? '#ffffff15' : '#e2e8f0'}
+          gap={20}
+          size={1.5}
+          color={dark ? '#ffffff22' : '#e2e8f0'}
         />
         <Controls className="!shadow-md" />
         <MiniMap

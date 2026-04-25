@@ -13,15 +13,19 @@ export function DelayNode({ id, selected, data }: NodeProps<DelayFlowNode>) {
       selected={!!selected}
       hasError={d.hasError}
       errorMessage={d.errorMessage}
-      accentColor="bg-slate-600"
-      icon={<Clock size={12} />}
-      label="Wait"
-      subtitle={d.title || 'Delay Execution'}
-      dark={true}
+      accentGradient="from-slate-400 to-slate-600"
+      accentText="text-slate-300"
+      accentPill="bg-slate-500/15 border border-slate-500/20"
+      bgGradient="bg-gradient-to-br from-slate-500/10 to-[#181828]"
+      borderGlow="border border-slate-500/20"
+      icon={<Clock size={13} />}
+      label={d.title || 'Wait'}
+      typeLabel="Delay"
+      subtitle="Pause execution"
     >
-      <div className="flex items-center justify-center gap-1 text-xs font-semibold text-white/80 bg-white/5 py-1.5 rounded border border-white/10">
-        <span>{d.duration}</span>
-        <span className="text-white/50 capitalize">{d.unit}</span>
+      <div className="flex items-center justify-center gap-2 py-1 rounded-xl bg-white/[0.04] border border-white/[0.07]">
+        <span className="text-xl font-black text-white/90 tabular-nums leading-none">{d.duration}</span>
+        <span className="text-[10px] font-semibold text-white/40 uppercase tracking-widest">{d.unit}</span>
       </div>
     </BaseNode>
   );

@@ -142,7 +142,7 @@ function describeTrigger(startData: StartNodeData): string {
 function withDefaultReliability(policy: ReliabilityPolicy | undefined): ReliabilityPolicy {
   return {
     retryPolicy: {
-      maxRetries: policy?.retryPolicy?.maxRetries ?? 1,
+      maxRetries: policy?.retryPolicy?.maxRetries ?? 2,
       backoffMs: policy?.retryPolicy?.backoffMs ?? 500,
       strategy: policy?.retryPolicy?.strategy ?? 'fixed',
     },
@@ -172,7 +172,8 @@ function simulateAutomatedStep(policy: ReliabilityPolicy): {
     attempts += 1;
     const runtime = Math.floor(Math.random() * 1000) + 150;
     const timedOut = runtime > policy.timeoutMs;
-    const transientFailure = !timedOut && Math.random() < 0.25;
+    // Lowered from 25% to 5% to ensure demo workflows rarely fail randomly
+    const transientFailure = !timedOut && Math.random() < 0.05;
     totalDuration += Math.min(runtime, policy.timeoutMs);
 
     if (!timedOut && !transientFailure) {

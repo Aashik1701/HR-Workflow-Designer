@@ -8,6 +8,9 @@ type SplitFlowNode = Node<SplitNodeData, 'splitNode'>;
 
 export function SplitNode({ id, selected, data }: NodeProps<SplitFlowNode>) {
   const d = data;
+  const pctA = d.splitPercentage ?? 50;
+  const pctB = 100 - pctA;
+
   return (
     <div className="relative">
       <BaseNode
@@ -15,42 +18,52 @@ export function SplitNode({ id, selected, data }: NodeProps<SplitFlowNode>) {
         selected={!!selected}
         hasError={d.hasError}
         errorMessage={d.errorMessage}
-        accentColor="bg-cyan-500"
-        icon={<GitBranch size={12} />}
-        label="Split Flow"
-        subtitle={d.title || 'A/B Route'}
-        showSourceHandle={false} // We provide custom handles
-        dark={true}
+        accentGradient="from-cyan-400 to-teal-500"
+        accentText="text-cyan-300"
+        accentPill="bg-cyan-500/15 border border-cyan-500/20"
+        bgGradient="bg-gradient-to-br from-cyan-500/10 to-[#181828]"
+        borderGlow="border border-cyan-500/20"
+        icon={<GitBranch size={13} />}
+        label={d.title || 'Split Flow'}
+        typeLabel="A/B Split"
+        subtitle="Traffic routing"
+        showSourceHandle={false}
       >
-        <div className="text-[10px] text-white/50 bg-black/20 rounded p-1.5 flex flex-col gap-1">
-          <div className="flex justify-between items-center">
-            <span className="font-mono text-cyan-400">A</span>
-            <span className="truncate max-w-[80px]">{d.pathALabel}</span>
-            <span className="font-semibold">{d.splitPercentage}%</span>
+        {/* Path rows */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between gap-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-1.5">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[9px] font-black text-cyan-300 uppercase tracking-widest w-4">A</span>
+              <span className="text-[10px] text-white/65 truncate max-w-[80px]">{d.pathALabel || 'Path A'}</span>
+            </div>
+            <span className="text-[11px] font-bold text-cyan-300 tabular-nums">{pctA}%</span>
           </div>
-          <div className="w-full h-px bg-white/10" />
-          <div className="flex justify-between items-center">
-            <span className="font-mono text-fuchsia-400">B</span>
-            <span className="truncate max-w-[80px]">{d.pathBLabel}</span>
-            <span className="font-semibold">{100 - d.splitPercentage}%</span>
+          <div className="flex items-center justify-between gap-2 rounded-lg bg-fuchsia-500/10 border border-fuchsia-500/20 px-2.5 py-1.5">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[9px] font-black text-fuchsia-300 uppercase tracking-widest w-4">B</span>
+              <span className="text-[10px] text-white/65 truncate max-w-[80px]">{d.pathBLabel || 'Path B'}</span>
+            </div>
+            <span className="text-[11px] font-bold text-fuchsia-300 tabular-nums">{pctB}%</span>
           </div>
         </div>
       </BaseNode>
 
-      {/* Custom Source Handles */}
+      {/* Custom source handles */}
       <Handle
         type="source"
         id="pathA"
         position={Position.Bottom}
-        style={{ left: '25%' }}
-        className="!w-3 !h-3 !border-2 !bg-white/20 !border-[#1a1a2e] hover:!bg-cyan-400"
+        style={{ left: '28%' }}
+        className="!w-2.5 !h-2.5 !border-2 !border-[#181828] !bg-cyan-400/70 hover:!bg-cyan-400 transition-colors"
+        title="Path A"
       />
       <Handle
         type="source"
         id="pathB"
         position={Position.Bottom}
-        style={{ left: '75%' }}
-        className="!w-3 !h-3 !border-2 !bg-white/20 !border-[#1a1a2e] hover:!bg-fuchsia-400"
+        style={{ left: '72%' }}
+        className="!w-2.5 !h-2.5 !border-2 !border-[#181828] !bg-fuchsia-400/70 hover:!bg-fuchsia-400 transition-colors"
+        title="Path B"
       />
     </div>
   );
