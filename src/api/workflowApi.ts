@@ -1,6 +1,10 @@
 import type {
+  AutomatedStepNodeData,
   NodeType,
+  ReliabilityPolicy,
   SimulationResult,
+  SimulationStep,
+  StartNodeData,
   WorkflowEdge,
   WorkflowNode,
 } from '../types/workflow';
@@ -15,27 +19,208 @@ export async function simulateWorkflow(
   await new Promise((r) => setTimeout(r, 800));
 
   const executionOrder = getExecutionOrder(nodes, edges);
+  const simulatedAt = Date.now();
+  const errors: string[] = [];
+  const steps: SimulationStep[] = [];
 
-  const steps = executionOrder.map((node, index: number) => {
+  executionOrder.forEach((node, index) => {
     const nodeType = (node.type ?? (node.data as { type?: string }).type) as NodeType;
-    return {
+    if (nodeType === 'startNode') {
+      const startData = node.data as StartNodeData;
+      const triggerValidationError = validateStartTrigger(startData);
+      if (triggerValidationError) {
+        errors.push(`[${getNodeTitle(node)}] ${triggerValidationError}`);
+        steps.push({
+          nodeId: node.id,
+          nodeType,
+          nodeTitle: getNodeTitle(node),
+          status: 'error',
+          message: `Trigger configuration invalid: ${triggerValidationError}`,
+          timestamp: new Date(simulatedAt + index * 500).toISOString(),
+          durationMs: 0,
+        });
+        return;
+      }
+
+      steps.push({
+        nodeId: node.id,
+        nodeType,
+        nodeTitle: getNodeTitle(node),
+        status: 'success',
+        message: `Triggered by ${describeTrigger(startData)}`,
+        timestamp: new Date(simulatedAt + index * 500).toISOString(),
+        durationMs: 80,
+      });
+      return;
+    }
+
+    if (nodeType === 'automatedStepNode') {
+      const autoData = node.data as AutomatedStepNodeData;
+      const reliability = withDefaultReliability(autoData.reliability);
+      const attemptResult = simulateAutomatedStep(reliability);
+      const failureBranchTarget =
+        attemptResult.success || reliability.onFailure.mode !== 'branch'
+          ? undefined
+          : reliability.onFailure.branchTargetNodeId;
+      const deadLettered =
+        !attemptResult.success &&
+        (reliability.deadLetterQueue.enabled || reliability.onFailure.mode === 'deadLetterQueue');
+
+      if (!attemptResult.success) {
+        errors.push(
+          `[${getNodeTitle(node)}] Failed after ${attemptResult.attempts} attempt(s): ${attemptResult.reason}`
+        );
+      }
+
+      steps.push({
+        nodeId: node.id,
+        nodeType,
+        nodeTitle: getNodeTitle(node),
+        status: attemptResult.success ? 'success' : 'error',
+        message: buildAutomatedMessage(attemptResult, reliability, deadLettered, failureBranchTarget),
+        timestamp: new Date(simulatedAt + index * 500).toISOString(),
+        durationMs: attemptResult.durationMs,
+        attempts: attemptResult.attempts,
+        retried: attemptResult.attempts > 1,
+        deadLettered,
+        failureBranchTarget,
+      });
+      return;
+    }
+
+    steps.push({
       nodeId: node.id,
       nodeType,
       nodeTitle: getNodeTitle(node),
-      status: 'success' as const,
+      status: 'success',
       message: getStepMessage(nodeType),
-      timestamp: new Date(Date.now() + index * 500).toISOString(),
+      timestamp: new Date(simulatedAt + index * 500).toISOString(),
       durationMs: Math.floor(Math.random() * 400) + 100,
-    };
+    });
   });
 
   return {
-    success: true,
+    success: errors.length === 0,
     totalSteps: steps.length,
     executedSteps: steps,
-    errors: [],
+    errors,
     completedAt: new Date().toISOString(),
   };
+}
+
+function validateStartTrigger(startData: StartNodeData): string | null {
+  const triggerType = startData.triggerType ?? 'manual';
+  const config = startData.triggerConfig ?? {};
+
+  if (triggerType === 'schedule' && !config.cron?.trim()) {
+    return 'Schedule trigger requires a cron expression.';
+  }
+  if (triggerType === 'webhook' && !config.webhookPath?.trim()) {
+    return 'Webhook trigger requires a webhook path.';
+  }
+  if (triggerType === 'event' && !config.eventName?.trim()) {
+    return 'Event trigger requires an event name.';
+  }
+
+  return null;
+}
+
+function describeTrigger(startData: StartNodeData): string {
+  const triggerType = startData.triggerType ?? 'manual';
+  const config = startData.triggerConfig ?? {};
+
+  if (triggerType === 'schedule') return `schedule (${config.cron})`;
+  if (triggerType === 'webhook') return `webhook (${config.webhookPath})`;
+  if (triggerType === 'event') {
+    const source = config.source?.trim() ? ` from ${config.source}` : '';
+    return `event ${config.eventName}${source}`;
+  }
+
+  return 'manual trigger';
+}
+
+function withDefaultReliability(policy: ReliabilityPolicy | undefined): ReliabilityPolicy {
+  return {
+    retryPolicy: {
+      maxRetries: policy?.retryPolicy?.maxRetries ?? 1,
+      backoffMs: policy?.retryPolicy?.backoffMs ?? 500,
+      strategy: policy?.retryPolicy?.strategy ?? 'fixed',
+    },
+    timeoutMs: policy?.timeoutMs ?? 5000,
+    deadLetterQueue: {
+      enabled: policy?.deadLetterQueue?.enabled ?? false,
+      queueName: policy?.deadLetterQueue?.queueName ?? 'automation_dead_letter',
+    },
+    onFailure: {
+      mode: policy?.onFailure?.mode ?? 'continue',
+      branchTargetNodeId: policy?.onFailure?.branchTargetNodeId,
+    },
+  };
+}
+
+function simulateAutomatedStep(policy: ReliabilityPolicy): {
+  success: boolean;
+  attempts: number;
+  reason: string;
+  durationMs: number;
+} {
+  let attempts = 0;
+  let totalDuration = 0;
+  let reason = 'transient failure';
+
+  while (attempts <= policy.retryPolicy.maxRetries) {
+    attempts += 1;
+    const runtime = Math.floor(Math.random() * 1000) + 150;
+    const timedOut = runtime > policy.timeoutMs;
+    const transientFailure = !timedOut && Math.random() < 0.25;
+    totalDuration += Math.min(runtime, policy.timeoutMs);
+
+    if (!timedOut && !transientFailure) {
+      return { success: true, attempts, reason: 'none', durationMs: totalDuration };
+    }
+
+    reason = timedOut ? 'timeout exceeded' : 'transient failure';
+
+    if (attempts <= policy.retryPolicy.maxRetries) {
+      const factor = policy.retryPolicy.strategy === 'exponential' ? 2 ** (attempts - 1) : 1;
+      totalDuration += policy.retryPolicy.backoffMs * factor;
+    }
+  }
+
+  return {
+    success: false,
+    attempts,
+    reason,
+    durationMs: totalDuration,
+  };
+}
+
+function buildAutomatedMessage(
+  attemptResult: { success: boolean; attempts: number; reason: string },
+  policy: ReliabilityPolicy,
+  deadLettered: boolean,
+  failureBranchTarget?: string
+): string {
+  if (attemptResult.success) {
+    return attemptResult.attempts > 1
+      ? `Succeeded after ${attemptResult.attempts} attempt(s).`
+      : 'Automated action executed on first attempt.';
+  }
+
+  const parts = [
+    `Failed after ${attemptResult.attempts} attempt(s): ${attemptResult.reason}.`,
+    `Failure mode: ${policy.onFailure.mode}.`,
+  ];
+
+  if (failureBranchTarget) {
+    parts.push(`Routed to failure branch target ${failureBranchTarget}.`);
+  }
+
+  if (deadLettered) {
+    parts.push(`Dead-lettered to ${policy.deadLetterQueue.queueName}.`);
+  }
+
+  return parts.join(' ');
 }
 
 function getExecutionOrder(nodes: WorkflowNode[], edges: WorkflowEdge[]): WorkflowNode[] {

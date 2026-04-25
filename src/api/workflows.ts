@@ -1,5 +1,5 @@
 import { supabase } from '../lib/supabase';
-import type { WorkflowRow, WorkflowStatus } from '../lib/database.types';
+import type { WorkflowRow, WorkflowStatus, WorkflowVersionRow } from '../lib/database.types';
 
 export async function fetchWorkflows(): Promise<WorkflowRow[]> {
   const { data, error } = await supabase
@@ -56,6 +56,108 @@ export async function deleteWorkflow(id: string): Promise<void> {
     .delete()
     .eq('id', id);
   if (error) throw error;
+}
+
+async function getNextWorkflowVersionNumber(workflowId: string): Promise<number> {
+  const { data, error } = await supabase
+    .from('workflow_versions')
+    .select('version_number')
+    .eq('workflow_id', workflowId)
+    .order('version_number', { ascending: false })
+    .limit(1);
+
+  if (error) throw error;
+  return (data?.[0]?.version_number ?? 0) + 1;
+}
+
+export async function fetchWorkflowVersions(workflowId: string): Promise<WorkflowVersionRow[]> {
+  const { data, error } = await supabase
+    .from('workflow_versions')
+    .select('*')
+    .eq('workflow_id', workflowId)
+    .order('version_number', { ascending: false });
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function publishWorkflowVersion(
+  workflowId: string,
+  nodes: unknown[],
+  edges: unknown[],
+  changeNote: string
+): Promise<WorkflowVersionRow> {
+  const versionNumber = await getNextWorkflowVersionNumber(workflowId);
+
+  const { data, error } = await supabase
+    .from('workflow_versions')
+    .insert({
+      workflow_id: workflowId,
+      version_number: versionNumber,
+      change_note: changeNote.trim(),
+      nodes_data: nodes,
+      edges_data: edges,
+      is_published: true,
+      published_at: new Date().toISOString(),
+    })
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  const { error: workflowUpdateError } = await supabase
+    .from('workflows')
+    .update({ status: 'active', nodes_data: nodes, edges_data: edges })
+    .eq('id', workflowId);
+
+  if (workflowUpdateError) throw workflowUpdateError;
+  return data;
+}
+
+export async function rollbackWorkflowToVersion(
+  workflowId: string,
+  targetVersionId: string,
+  rollbackNote?: string
+): Promise<WorkflowVersionRow> {
+  const { data: targetVersion, error: targetVersionError } = await supabase
+    .from('workflow_versions')
+    .select('*')
+    .eq('id', targetVersionId)
+    .eq('workflow_id', workflowId)
+    .single();
+
+  if (targetVersionError) throw targetVersionError;
+
+  const { error: workflowUpdateError } = await supabase
+    .from('workflows')
+    .update({
+      status: 'active',
+      nodes_data: targetVersion.nodes_data,
+      edges_data: targetVersion.edges_data,
+    })
+    .eq('id', workflowId);
+
+  if (workflowUpdateError) throw workflowUpdateError;
+
+  const versionNumber = await getNextWorkflowVersionNumber(workflowId);
+  const note = rollbackNote?.trim() || `Rollback to v${targetVersion.version_number}`;
+
+  const { data: rollbackSnapshot, error: rollbackSnapshotError } = await supabase
+    .from('workflow_versions')
+    .insert({
+      workflow_id: workflowId,
+      version_number: versionNumber,
+      change_note: note,
+      nodes_data: targetVersion.nodes_data,
+      edges_data: targetVersion.edges_data,
+      is_published: true,
+      published_at: new Date().toISOString(),
+    })
+    .select()
+    .single();
+
+  if (rollbackSnapshotError) throw rollbackSnapshotError;
+  return rollbackSnapshot;
 }
 
 export async function fetchDashboardStats() {

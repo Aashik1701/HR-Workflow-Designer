@@ -163,6 +163,12 @@ export const handlers = [
         stepMessage = `Task assigned to ${assignee || 'unassigned'} and queued`;
       }
 
+      let durationMs = Math.floor(Math.random() * 400) + 100;
+      if (nodeType === 'delayNode') {
+        // For simulation purposes, we use a slightly longer delay to show the "Wait" state
+        durationMs = 2000; 
+      }
+
       return {
         nodeId: node.id,
         nodeType,
@@ -170,7 +176,7 @@ export const handlers = [
         status: 'success' as const,
         message: stepMessage,
         timestamp: new Date(Date.now() + index * 500).toISOString(),
-        durationMs: Math.floor(Math.random() * 400) + 100,
+        durationMs,
       };
     });
 

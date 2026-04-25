@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Zap, History,
-  Settings, HelpCircle, ChevronLeft, ChevronRight,
+  ChevronLeft, ChevronRight, Plus, FlaskConical,
   Network
 } from 'lucide-react';
 import clsx from 'clsx';
+import toast from 'react-hot-toast';
+import { createWorkflow, saveWorkflow } from '../../api/workflows';
+import { logActivity } from '../../api/activity';
 
 const NAV = [
   { to: '/dashboard',   icon: LayoutDashboard, label: 'Command Center' },
@@ -14,13 +17,56 @@ const NAV = [
   { to: '/logs',        icon: History,         label: 'System Logs' },
 ];
 
-const BOTTOM = [
-  { to: '/settings', icon: Settings,   label: 'Settings' },
-  { to: '/help',     icon: HelpCircle, label: 'Help' },
-];
-
 export function Sidebar() {
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
+  const [creatingNew, setCreatingNew] = useState(false);
+  const [creatingPlayground, setCreatingPlayground] = useState(false);
+
+  const handleCreatePipeline = async () => {
+    if (creatingNew || creatingPlayground) return;
+    setCreatingNew(true);
+    try {
+      const name = `New Pipeline ${new Date().toLocaleDateString()}`;
+      const wf = await createWorkflow(name);
+      await logActivity('created', `Created pipeline "${name}" from sidebar`, wf.id, name);
+      toast.success('New pipeline created');
+      navigate(`/workflows/${wf.id}/edit`);
+    } catch {
+      toast.error('Failed to create pipeline');
+    } finally {
+      setCreatingNew(false);
+    }
+  };
+
+  const handleLaunchPlayground = async () => {
+    if (creatingNew || creatingPlayground) return;
+    setCreatingPlayground(true);
+    try {
+      const name = `Playground ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      const wf = await createWorkflow(name, 'Sandbox flow for trying ideas quickly');
+
+      const nodes = [
+        { id: 'start-node', type: 'startNode', position: { x: 260, y: 100 }, data: { type: 'startNode', title: 'Entry Point', metadata: [] } },
+        { id: 'task-node', type: 'taskNode', position: { x: 260, y: 250 }, data: { type: 'taskNode', title: 'Sandbox Task', assignee: '{{ user.email }}', dueInDays: 2, fields: [] } },
+        { id: 'end-node', type: 'endNode', position: { x: 260, y: 400 }, data: { type: 'endNode', endMessage: 'Playground complete', summaryFlag: false } },
+      ];
+
+      const edges = [
+        { id: 'e-start-task', source: 'start-node', target: 'task-node' },
+        { id: 'e-task-end', source: 'task-node', target: 'end-node' },
+      ];
+
+      await saveWorkflow(wf.id, nodes, edges);
+      await logActivity('created', `Launched playground "${name}"`, wf.id, name);
+      toast.success('Playground is ready');
+      navigate(`/workflows/${wf.id}/edit`);
+    } catch {
+      toast.error('Failed to launch playground');
+    } finally {
+      setCreatingPlayground(false);
+    }
+  };
 
   return (
     <aside className={clsx(
@@ -48,26 +94,8 @@ export function Sidebar() {
         )}
       </div>
 
-      {/* User Context (Moved to top) */}
-      <div className={clsx("px-4 pt-6 pb-3 transition-all", collapsed ? "px-2" : "")}>
-        <div className={clsx(
-          "flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] transition-colors cursor-pointer group",
-          collapsed ? "justify-center px-0" : ""
-        )}>
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-600 flex items-center justify-center text-[12px] font-extrabold flex-shrink-0 shadow-[0_0_15px_rgba(217,70,239,0.3)] text-white ring-2 ring-[#080811] group-hover:scale-105 transition-transform">
-            MA
-          </div>
-          {!collapsed && (
-            <div className="min-w-0 flex-1">
-              <p className="text-[13px] font-bold text-white truncate group-hover:text-fuchsia-100 transition-colors">Mohammed Aashik</p>
-              <p className="text-[10px] text-fuchsia-400/80 font-medium tracking-wide">WORKSPACE ADMIN</p>
-            </div>
-          )}
-        </div>
-      </div>
-
       {/* Main Nav */}
-      <nav className="flex-1 px-4 py-2 space-y-1.5 overflow-y-auto custom-scrollbar">
+      <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto custom-scrollbar">
         {NAV.map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
@@ -92,25 +120,44 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Bottom Nav */}
-      <div className="px-4 pb-6 space-y-1.5 border-t border-white/5 pt-5">
-        {BOTTOM.map(({ to, icon: Icon, label }) => (
-          <NavLink
-            key={to}
-            to={to}
-            className="flex items-center gap-3.5 px-3 py-3 rounded-xl text-sm text-white/40 hover:text-white/80 hover:bg-white/[0.03] transition-all duration-200 group relative"
-          >
-            <Icon size={18} className={clsx("flex-shrink-0 transition-transform group-hover:scale-110", collapsed && "mx-auto")} />
-            {!collapsed && <span className="whitespace-nowrap">{label}</span>}
+      <div className={clsx('px-4 pb-6 border-t border-white/5 pt-4 space-y-2', collapsed && 'px-2')}>
+        <button
+          type="button"
+          onClick={handleCreatePipeline}
+          disabled={creatingNew || creatingPlayground}
+          className={clsx(
+            'w-full flex items-center gap-2.5 rounded-xl border border-violet-500/25 bg-violet-500/12 px-3 py-2.5 text-xs font-semibold text-violet-100 transition-colors hover:bg-violet-500/20 disabled:opacity-60 relative group',
+            collapsed && 'justify-center px-0'
+          )}
+        >
+          <Plus size={15} className="flex-shrink-0" />
+          {!collapsed && <span>{creatingNew ? 'Creating...' : 'New Pipeline'}</span>}
+          {collapsed && (
+            <div className="absolute left-full ml-4 px-3 py-1.5 bg-[#1a1a2e] text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 border border-white/10 shadow-xl transition-all translate-x-[-10px] group-hover:translate-x-0">
+              {creatingNew ? 'Creating...' : 'New Pipeline'}
+            </div>
+          )}
+        </button>
 
-            {collapsed && (
-              <div className="absolute left-full ml-4 px-3 py-1.5 bg-[#1a1a2e] text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 border border-white/10 shadow-xl transition-all translate-x-[-10px] group-hover:translate-x-0">
-                {label}
-              </div>
-            )}
-          </NavLink>
-        ))}
+        <button
+          type="button"
+          onClick={handleLaunchPlayground}
+          disabled={creatingNew || creatingPlayground}
+          className={clsx(
+            'w-full flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-xs font-medium text-white/75 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-60 relative group',
+            collapsed && 'justify-center px-0'
+          )}
+        >
+          <FlaskConical size={15} className="flex-shrink-0" />
+          {!collapsed && <span>{creatingPlayground ? 'Launching...' : 'Launch New Playground'}</span>}
+          {collapsed && (
+            <div className="absolute left-full ml-4 px-3 py-1.5 bg-[#1a1a2e] text-white text-xs font-semibold rounded-md opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 border border-white/10 shadow-xl transition-all translate-x-[-10px] group-hover:translate-x-0">
+              {creatingPlayground ? 'Launching...' : 'Launch New Playground'}
+            </div>
+          )}
+        </button>
       </div>
+
     </aside>
   );
 }

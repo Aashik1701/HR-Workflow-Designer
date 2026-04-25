@@ -48,12 +48,13 @@ export function BaseNode({
     ? playbackStatus === 'success' 
       ? 'border-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.5)] scale-105 z-50'
       : playbackStatus === 'error'
-        ? 'border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.5)] scale-105 z-50'
+        ? 'border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.5)] scale-105 z-50 animate-pulse'
         : 'border-indigo-400 shadow-[0_0_20px_rgba(99,102,241,0.5)] scale-105 z-50'
     : '';
 
   return (
     <div
+      title={hasError ? errorMessage : label}
       className={clsx(
         'relative w-56 rounded-xl border-2 shadow-md transition-all duration-300',
         dark ? 'bg-[#1a1a2e] border-white/10' : 'bg-white border-slate-200',

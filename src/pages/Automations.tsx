@@ -556,11 +556,11 @@ export function Automations() {
           </div>
         </section>
 
-        <section className="grid gap-6 xl:grid-cols-[1.9fr_1fr] 2xl:grid-cols-[2.05fr_1fr]">
+        <section className="grid gap-6 xl:grid-cols-[minmax(0,1.85fr)_minmax(340px,1fr)] 2xl:grid-cols-[minmax(0,2fr)_minmax(360px,1fr)]">
           <div className="space-y-6">
             <div className="cinematic-panel rounded-3xl border border-white/10 bg-white/[0.03] p-4 shadow-xl shadow-black/10 backdrop-blur-sm">
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                <div className="relative flex-1">
+              <div className="space-y-4">
+                <div className="relative w-full">
                   <input
                     ref={searchRef}
                     value={query}
@@ -570,8 +570,8 @@ export function Automations() {
                   />
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/35">
+                <div className="flex items-center gap-2 overflow-x-auto pb-1 pr-1">
+                  <span className="inline-flex shrink-0 items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/35">
                     <FilterIcon />
                     Filters
                   </span>
@@ -582,7 +582,7 @@ export function Automations() {
                         key={option}
                         onClick={() => setCategoryFilter(option)}
                         className={clsx(
-                          'rounded-full border px-3 py-2 text-xs font-medium capitalize transition-colors',
+                          'shrink-0 whitespace-nowrap rounded-full border px-3 py-2 text-xs font-medium capitalize transition-colors',
                           categoryFilter === option
                             ? 'border-violet-500/30 bg-violet-500/15 text-violet-200'
                             : 'border-white/10 bg-white/5 text-white/50 hover:bg-white/10 hover:text-white'
@@ -595,7 +595,7 @@ export function Automations() {
                   <select
                     value={sortMode}
                     onChange={(event) => setSortMode(event.target.value as SortMode)}
-                    className="rounded-full border border-white/10 bg-[#0d0d18] px-3 py-2 text-xs text-white/70 outline-none"
+                    className="shrink-0 rounded-full border border-white/10 bg-[#0d0d18] px-3 py-2 text-xs text-white/70 outline-none"
                   >
                     <option value="recommended">Recommended first</option>
                     <option value="sla">Operational priority</option>
@@ -738,7 +738,7 @@ export function Automations() {
             </div>
           </div>
 
-          <aside className="space-y-6 xl:sticky xl:top-6 xl:self-start">
+          <aside className="w-full max-w-[420px] space-y-6 xl:sticky xl:top-6 xl:max-w-none xl:self-start">
             <div className="cinematic-panel rounded-3xl border border-white/10 bg-white/[0.03] p-5 shadow-2xl shadow-black/20 backdrop-blur-sm">
               <div className="flex items-center justify-between">
                 <div>
@@ -759,10 +759,10 @@ export function Automations() {
                 <div className="mt-5 space-y-4">
                   <div className="premium-lift rounded-2xl border border-white/10 bg-[#0d0d18] p-4">
                     <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="text-[10px] uppercase tracking-[0.18em] text-white/35">Selected automation</p>
-                        <h3 className="mt-2 text-lg font-semibold text-white">{selectedAutomation.label}</h3>
-                        <p className="mt-2 text-sm text-white/45">{selectedAutomation.description}</p>
+                      <div className="min-w-0">
+                        <p className="text-[10px] uppercase tracking-[0.14em] text-white/35">Selected automation</p>
+                        <h3 className="mt-2 text-lg font-semibold text-white break-words">{selectedAutomation.label}</h3>
+                        <p className="mt-2 text-sm text-white/45 break-words">{selectedAutomation.description}</p>
                       </div>
                       <span className={clsx('rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider', selectedAutomation.is_active ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-200' : 'border-white/10 bg-white/5 text-white/35')}>
                         {selectedAutomation.is_active ? 'Active' : 'Inactive'}
@@ -770,13 +770,13 @@ export function Automations() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 gap-3 2xl:grid-cols-2">
                     <div className="premium-lift rounded-2xl border border-white/10 bg-[#0d0d18] p-4">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-white/35">Category</p>
-                      <p className="mt-2 text-sm font-medium text-white">{CATEGORY_META[selectedAutomation.category].label}</p>
+                      <p className="text-[10px] uppercase tracking-[0.14em] text-white/35">Category</p>
+                      <p className="mt-2 text-sm font-medium text-white break-words">{CATEGORY_META[selectedAutomation.category].label}</p>
                     </div>
                     <div className="premium-lift rounded-2xl border border-white/10 bg-[#0d0d18] p-4">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-white/35">Recommended score</p>
+                      <p className="text-[10px] uppercase tracking-[0.14em] text-white/35">Recommended score</p>
                       <p className="mt-2 text-sm font-medium text-white">{getAutomationScore(selectedAutomation)} / 99</p>
                     </div>
                   </div>

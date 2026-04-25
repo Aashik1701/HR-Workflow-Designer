@@ -31,6 +31,28 @@ function StepCard({ step, dark }: { step: SimulationStep; dark?: boolean }) {
       <div className="flex-1 min-w-0">
         <p className={clsx('font-medium', dark ? 'text-white/80' : 'text-slate-700')}>{step.nodeTitle}</p>
         <p className={clsx(dark ? 'text-white/40' : 'text-slate-500')}>{step.message}</p>
+        <div className="mt-1 flex flex-wrap gap-1">
+          {typeof step.attempts === 'number' && (
+            <span className={clsx('rounded px-1.5 py-0.5 text-[10px]', dark ? 'bg-white/10 text-white/60' : 'bg-slate-100 text-slate-600')}>
+              attempts: {step.attempts}
+            </span>
+          )}
+          {step.retried && (
+            <span className={clsx('rounded px-1.5 py-0.5 text-[10px]', dark ? 'bg-amber-500/20 text-amber-300' : 'bg-amber-100 text-amber-700')}>
+              retried
+            </span>
+          )}
+          {step.deadLettered && (
+            <span className={clsx('rounded px-1.5 py-0.5 text-[10px]', dark ? 'bg-rose-500/20 text-rose-300' : 'bg-rose-100 text-rose-700')}>
+              dead-lettered
+            </span>
+          )}
+          {step.failureBranchTarget && (
+            <span className={clsx('rounded px-1.5 py-0.5 text-[10px]', dark ? 'bg-indigo-500/20 text-indigo-300' : 'bg-indigo-100 text-indigo-700')}>
+              branch → {step.failureBranchTarget}
+            </span>
+          )}
+        </div>
         <p className={clsx('text-[10px] mt-0.5', dark ? 'text-white/25' : 'text-slate-400')}>{step.durationMs}ms</p>
       </div>
     </div>
@@ -113,6 +135,18 @@ export function SimulationPanel({ workflowId, dark }: SimulationPanelProps) {
                 {result.totalSteps} steps
               </span>
             </div>
+
+            {result.errors.length > 0 && (
+              <div className={clsx(
+                'p-3 rounded-lg border text-xs space-y-1',
+                dark ? 'bg-red-500/10 border-red-500/20 text-red-300' : 'bg-red-50 border-red-200 text-red-700'
+              )}>
+                <p className="font-medium">Execution errors</p>
+                {result.errors.map((executionError, index) => (
+                  <p key={index} className="text-[11px]">• {executionError}</p>
+                ))}
+              </div>
+            )}
 
             <button
               onClick={handlePlayback}

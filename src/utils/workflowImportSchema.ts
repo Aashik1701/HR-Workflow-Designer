@@ -15,6 +15,13 @@ const startNodeDataSchema = z.object({
   type: z.literal('startNode'),
   title: z.string(),
   metadata: z.array(keyValuePairSchema),
+  triggerType: z.enum(['manual', 'schedule', 'webhook', 'event']).optional(),
+  triggerConfig: z.object({
+    cron: z.string().optional(),
+    webhookPath: z.string().optional(),
+    eventName: z.string().optional(),
+    source: z.string().optional(),
+  }).optional(),
   hasError: z.boolean().optional(),
   errorMessage: z.string().optional(),
 });
@@ -44,6 +51,22 @@ const automatedStepNodeDataSchema = z.object({
   title: z.string(),
   actionId: z.string(),
   actionParams: z.record(z.string(), z.string()),
+  reliability: z.object({
+    retryPolicy: z.object({
+      maxRetries: z.number(),
+      backoffMs: z.number(),
+      strategy: z.enum(['fixed', 'exponential']),
+    }),
+    timeoutMs: z.number(),
+    deadLetterQueue: z.object({
+      enabled: z.boolean(),
+      queueName: z.string(),
+    }),
+    onFailure: z.object({
+      mode: z.enum(['continue', 'branch', 'deadLetterQueue']),
+      branchTargetNodeId: z.string().optional(),
+    }),
+  }).optional(),
   hasError: z.boolean().optional(),
   errorMessage: z.string().optional(),
 });

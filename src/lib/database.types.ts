@@ -15,6 +15,18 @@ export interface WorkflowRow {
   updated_at: string;
 }
 
+export interface WorkflowVersionRow {
+  id: string;
+  workflow_id: string;
+  version_number: number;
+  change_note: string;
+  nodes_data: unknown[];
+  edges_data: unknown[];
+  is_published: boolean;
+  published_at: string | null;
+  created_at: string;
+}
+
 export interface AutomationRow {
   id: string;
   label: string;

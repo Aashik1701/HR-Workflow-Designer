@@ -21,6 +21,8 @@ export interface StartNodeData {
   type: 'startNode';
   title: string;
   metadata: KeyValuePair[];
+  triggerType?: TriggerType;
+  triggerConfig?: TriggerConfig;
   hasError?: boolean;
   errorMessage?: string;
 }
@@ -59,6 +61,7 @@ export interface AutomatedStepNodeData {
   title: string;
   actionId: string;
   actionParams: Record<string, string>;
+  reliability?: ReliabilityPolicy;
   hasError?: boolean;
   errorMessage?: string;
 }
@@ -122,6 +125,10 @@ export interface SimulationStep {
   message: string;
   timestamp: string;
   durationMs: number;
+  attempts?: number;
+  retried?: boolean;
+  deadLettered?: boolean;
+  failureBranchTarget?: string;
 }
 
 export interface SimulationResult {
@@ -142,4 +149,40 @@ export interface ValidationError {
 export interface ValidationResult {
   isValid: boolean;
   errors: ValidationError[];
+}
+
+// ─── Reliability / Trigger Types ───────────────────────────────────────────
+
+export type RetryStrategy = 'fixed' | 'exponential';
+export type FailureMode = 'continue' | 'branch' | 'deadLetterQueue';
+export type TriggerType = 'manual' | 'schedule' | 'webhook' | 'event';
+
+export interface RetryPolicy {
+  maxRetries: number;
+  backoffMs: number;
+  strategy: RetryStrategy;
+}
+
+export interface DeadLetterQueueConfig {
+  enabled: boolean;
+  queueName: string;
+}
+
+export interface OnFailureConfig {
+  mode: FailureMode;
+  branchTargetNodeId?: string;
+}
+
+export interface ReliabilityPolicy {
+  retryPolicy: RetryPolicy;
+  timeoutMs: number;
+  deadLetterQueue: DeadLetterQueueConfig;
+  onFailure: OnFailureConfig;
+}
+
+export interface TriggerConfig {
+  cron?: string;
+  webhookPath?: string;
+  eventName?: string;
+  source?: string;
 }
