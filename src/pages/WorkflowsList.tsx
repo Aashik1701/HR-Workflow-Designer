@@ -86,7 +86,7 @@ export function WorkflowsList() {
           inset: 0;
           border-radius: inherit;
           border: 1px solid rgba(255,255,255,0.06);
-          background: radial-gradient(circle at 25% 12%, rgba(124,58,237,0.08) 0%, transparent 42%);
+          background: radial-gradient(circle at 25% 12%, rgba(37,99,235,0.08) 0%, transparent 42%);
           pointer-events: none;
         }
         @media (pointer: coarse), (prefers-reduced-motion: reduce) {
@@ -104,10 +104,10 @@ export function WorkflowsList() {
       `}</style>
 
       <div className="pointer-events-none absolute inset-0">
-        <div className="ambient-layer absolute -top-24 left-0 h-80 w-80 rounded-full bg-violet-600/15 blur-3xl" />
+        <div className="ambient-layer absolute -top-24 left-0 h-80 w-80 rounded-full bg-blue-600/15 blur-3xl" />
         <div className="ambient-layer-alt absolute right-0 top-20 h-96 w-96 rounded-full bg-cyan-500/10 blur-3xl" />
-        <div className="ambient-layer absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-fuchsia-500/10 blur-3xl" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(124,58,237,0.16),transparent_35%),radial-gradient(circle_at_80%_16%,rgba(34,211,238,0.11),transparent_33%),linear-gradient(180deg,rgba(9,9,19,0.72),rgba(9,9,19,0.94))]" />
+        <div className="ambient-layer absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-teal-500/10 blur-3xl" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(37,99,235,0.16),transparent_35%),radial-gradient(circle_at_80%_16%,rgba(34,211,238,0.11),transparent_33%),linear-gradient(180deg,rgba(9,9,19,0.72),rgba(9,9,19,0.94))]" />
       </div>
 
       <div className="relative mx-auto max-w-[1520px] space-y-6 p-5 md:p-6 xl:px-10">
@@ -115,12 +115,12 @@ export function WorkflowsList() {
           <div className="mb-3 flex items-center gap-1 text-xs text-white/35">
             <span>Architect</span>
             <ChevronRight size={12} />
-            <span className="text-violet-300">Pipelines</span>
+            <span className="text-blue-300">Pipelines</span>
           </div>
 
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-violet-200">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-200">
                 <Sparkles size={12} /> Pipeline Orchestration
               </div>
               <h1 className="mt-2 text-2xl font-black tracking-tight text-white md:text-4xl">Pipelines</h1>
@@ -132,7 +132,7 @@ export function WorkflowsList() {
             <button
               onClick={handleCreate}
               disabled={creating}
-              className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-600/20 transition-colors hover:bg-violet-500 disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition-colors hover:bg-blue-500 disabled:opacity-50"
             >
               <Plus size={15} />
               {creating ? 'Creating...' : 'New Pipeline'}
@@ -144,13 +144,13 @@ export function WorkflowsList() {
               <p className="text-[10px] uppercase tracking-[0.18em] text-white/35">Total</p>
               <p className="mt-1 text-2xl font-extrabold text-white tabular-nums">{stats.total}</p>
             </div>
-            <div className="premium-lift premium-shine relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.06] p-4">
+            <div className="premium-lift premium-shine relative overflow-hidden rounded-2xl border border-teal-500/20 bg-teal-500/[0.06] p-4">
               <p className="text-[10px] uppercase tracking-[0.18em] text-emerald-200/80">Active</p>
               <p className="mt-1 text-2xl font-extrabold text-emerald-200 tabular-nums">{stats.active}</p>
             </div>
-            <div className="premium-lift premium-shine relative overflow-hidden rounded-2xl border border-violet-500/20 bg-violet-500/[0.06] p-4">
-              <p className="text-[10px] uppercase tracking-[0.18em] text-violet-200/80">Draft</p>
-              <p className="mt-1 text-2xl font-extrabold text-violet-200 tabular-nums">{stats.draft}</p>
+            <div className="premium-lift premium-shine relative overflow-hidden rounded-2xl border border-blue-500/20 bg-blue-500/[0.06] p-4">
+              <p className="text-[10px] uppercase tracking-[0.18em] text-blue-200/80">Draft</p>
+              <p className="mt-1 text-2xl font-extrabold text-blue-200 tabular-nums">{stats.draft}</p>
             </div>
             <div className="premium-lift premium-shine relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-4">
               <p className="text-[10px] uppercase tracking-[0.18em] text-white/35">Archived</p>
@@ -173,7 +173,7 @@ export function WorkflowsList() {
                     className={clsx(
                       'rounded-full border px-3 py-2 text-xs font-medium capitalize transition-colors',
                       statusFilter === s
-                        ? 'border-violet-500/30 bg-violet-500/15 text-violet-200'
+                        ? 'border-blue-500/30 bg-blue-500/15 text-blue-200'
                         : 'border-white/10 bg-white/5 text-white/50 hover:bg-white/10 hover:text-white'
                     )}
                   >
@@ -203,7 +203,7 @@ export function WorkflowsList() {
                   <tr>
                     <td colSpan={6} className="px-5 py-12 text-center">
                       <div className="flex flex-col items-center gap-2 text-white/30">
-                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-violet-500 border-t-transparent" />
+                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
                         <span className="text-xs">Loading workflows...</span>
                       </div>
                     </td>
@@ -212,7 +212,7 @@ export function WorkflowsList() {
                   <tr>
                     <td colSpan={6} className="px-5 py-12 text-center text-sm text-white/30">
                       No pipelines found.
-                      <button onClick={handleCreate} className="ml-2 text-violet-300 underline underline-offset-2 hover:text-violet-200">
+                      <button onClick={handleCreate} className="ml-2 text-blue-300 underline underline-offset-2 hover:text-blue-200">
                         Create your first
                       </button>
                     </td>
@@ -222,8 +222,8 @@ export function WorkflowsList() {
                     <tr key={wf.id} className="group transition-colors hover:bg-white/[0.03]">
                       <td className="px-5 py-4">
                         <div className="flex items-start gap-3">
-                          <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-violet-500/25 bg-violet-500/10">
-                            <GitBranch size={12} className="text-violet-300" />
+                          <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-blue-500/25 bg-blue-500/10">
+                            <GitBranch size={12} className="text-blue-300" />
                           </div>
                           <div className="min-w-0">
                             <p className="text-sm font-medium text-white/90">{wf.name}</p>
@@ -240,7 +240,7 @@ export function WorkflowsList() {
                           className={clsx(
                             'inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em]',
                             wf.status === 'active'
-                              ? 'border-emerald-500/30 bg-emerald-500/12 text-emerald-200'
+                              ? 'border-teal-500/30 bg-teal-500/12 text-emerald-200'
                               : wf.status === 'archived'
                                 ? 'border-white/10 bg-white/5 text-white/30'
                                 : 'border-white/10 bg-white/5 text-white/50'
@@ -254,7 +254,7 @@ export function WorkflowsList() {
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => navigate(`/workflows/${wf.id}/edit`)}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-[11px] text-white/65 transition-colors hover:border-violet-500/30 hover:bg-violet-500/12 hover:text-violet-200"
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-[11px] text-white/65 transition-colors hover:border-blue-500/30 hover:bg-blue-500/12 hover:text-blue-200"
                             title="Edit Pipeline"
                           >
                             <Edit2 size={13} />
@@ -263,7 +263,7 @@ export function WorkflowsList() {
                           {wf.status !== 'active' && (
                             <button
                               onClick={() => activate(wf.id, wf.name)}
-                              className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-[11px] text-white/65 transition-colors hover:border-emerald-500/30 hover:bg-emerald-500/12 hover:text-emerald-200"
+                              className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-[11px] text-white/65 transition-colors hover:border-teal-500/30 hover:bg-teal-500/12 hover:text-emerald-200"
                               title="Deploy Pipeline"
                             >
                               <Zap size={13} />

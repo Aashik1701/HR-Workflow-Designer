@@ -1,8 +1,10 @@
 import React from 'react';
 import { Handle, Position, useReactFlow } from '@xyflow/react';
-import { X, AlertCircle } from 'lucide-react';
+import { X, AlertCircle, Lock } from 'lucide-react';
 import clsx from 'clsx';
 import { useWorkflowStore } from '../../store/workflowStore';
+import { useMultiplayerStore } from '../../store/multiplayerStore';
+import { me } from '../../hooks/useMultiplayer';
 
 interface BaseNodeProps {
   id: string;
@@ -56,6 +58,10 @@ export function BaseNode({
     deleteElements({ nodes: [{ id }] });
   };
 
+  const collaborators = useMultiplayerStore((s) => s.collaborators);
+  const locker = Object.values(collaborators).find(c => c.selectedNodeId === id && c.id !== me.id);
+  const isLocked = !!locker;
+
   /* ── Playback glow ring ────────────────────────────────────────────────── */
   const playbackRing = isPlaying
     ? playbackStatus === 'success'
@@ -76,13 +82,27 @@ export function BaseNode({
         'shadow-[0_8px_32px_rgba(0,0,0,0.6),0_0_0_1px_rgba(255,255,255,0.05)]',
         'transition-all duration-300 ease-out',
         /* Selected glow */
-        selected && !isPlaying && 'ring-2 ring-violet-500/70 shadow-[0_0_30px_rgba(139,92,246,0.4)]',
+        selected && !isPlaying && !isLocked && 'ring-2 ring-blue-500/70 shadow-[0_0_30px_rgba(59,130,246,0.4)]',
+        /* Locked glow */
+        isLocked && !isPlaying && `ring-2 shadow-[0_0_30px_rgba(0,0,0,0.5)]`,
         /* Error state */
-        hasError && !isPlaying && 'ring-2 ring-red-500/50',
+        hasError && !isPlaying && !isLocked && 'ring-2 ring-red-500/50',
         /* Playback override */
         playbackRing,
       )}
+      style={{
+        boxShadow: isLocked && !isPlaying ? `0 0 0 2px ${locker.color}` : undefined
+      }}
     >
+      {isLocked && (
+        <div 
+          className="absolute -top-6 right-0 rounded px-2 py-0.5 text-[10px] font-bold text-white shadow-sm flex items-center gap-1 z-50"
+          style={{ backgroundColor: locker.color }}
+        >
+          <Lock size={10} />
+          {locker.name}
+        </div>
+      )}
       {/* ── Left accent bar ──────────────────────────────────────────────── */}
       <div
         className={clsx(
@@ -133,7 +153,7 @@ export function BaseNode({
 
       {/* ── Body ─────────────────────────────────────────────────────────── */}
       {children && (
-        <div className="px-3 py-2.5 text-white/80">
+        <div className={clsx("px-3 py-2.5 text-white/80", isLocked && "pointer-events-none opacity-60")}>
           {children}
         </div>
       )}
@@ -163,14 +183,14 @@ export function BaseNode({
         <Handle
           type="target"
           position={Position.Top}
-          className="!w-2.5 !h-2.5 !border-2 !border-[#181828] !bg-white/30 hover:!bg-violet-400 transition-colors"
+          className="!w-2.5 !h-2.5 !border-2 !border-[#181828] !bg-white/30 hover:!bg-blue-400 transition-colors"
         />
       )}
       {showSourceHandle && (
         <Handle
           type="source"
           position={Position.Bottom}
-          className="!w-2.5 !h-2.5 !border-2 !border-[#181828] !bg-white/30 hover:!bg-violet-400 transition-colors"
+          className="!w-2.5 !h-2.5 !border-2 !border-[#181828] !bg-white/30 hover:!bg-blue-400 transition-colors"
         />
       )}
     </div>

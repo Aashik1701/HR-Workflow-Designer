@@ -45,9 +45,9 @@ function StatCard({ icon, value, label, helper, badge, badgeTone, accent }: Stat
 const activityConfig: Record<string, { dot: string; ring: string }> = {
   modified: { dot: 'bg-indigo-400', ring: 'border-indigo-500/30 bg-indigo-500/10' },
   approved: { dot: 'bg-teal-400', ring: 'border-teal-500/30 bg-teal-500/10' },
-  warning: { dot: 'bg-amber-400', ring: 'border-amber-500/30 bg-amber-500/10' },
+  warning: { dot: 'bg-amber-400', ring: 'border-cyan-500/30 bg-cyan-500/10' },
   created: { dot: 'bg-sky-400', ring: 'border-sky-500/30 bg-sky-500/10' },
-  deployed: { dot: 'bg-fuchsia-400', ring: 'border-fuchsia-500/30 bg-fuchsia-500/10' },
+  deployed: { dot: 'bg-teal-400', ring: 'border-teal-500/30 bg-teal-500/10' },
 };
 
 export function Dashboard() {
@@ -58,7 +58,7 @@ export function Dashboard() {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-violet-500 border-t-transparent" />
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
           <p className="text-sm font-medium tracking-wide text-white/40">Initializing Command Center...</p>
         </div>
       </div>
@@ -103,7 +103,7 @@ export function Dashboard() {
           inset: 0;
           border-radius: inherit;
           border: 1px solid rgba(255,255,255,0.06);
-          background: radial-gradient(circle at 25% 12%, rgba(124,58,237,0.08) 0%, transparent 42%);
+          background: radial-gradient(circle at 25% 12%, rgba(37,99,235,0.08) 0%, transparent 42%);
           pointer-events: none;
         }
         @media (pointer: coarse), (prefers-reduced-motion: reduce) {
@@ -121,17 +121,17 @@ export function Dashboard() {
       `}</style>
 
       <div className="pointer-events-none absolute inset-0">
-        <div className="ambient-layer absolute -top-24 left-0 h-80 w-80 rounded-full bg-violet-600/15 blur-3xl" />
+        <div className="ambient-layer absolute -top-24 left-0 h-80 w-80 rounded-full bg-blue-600/15 blur-3xl" />
         <div className="ambient-layer-alt absolute right-0 top-20 h-96 w-96 rounded-full bg-cyan-500/10 blur-3xl" />
-        <div className="ambient-layer absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-fuchsia-500/10 blur-3xl" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(124,58,237,0.16),transparent_35%),radial-gradient(circle_at_80%_16%,rgba(34,211,238,0.11),transparent_33%),linear-gradient(180deg,rgba(9,9,19,0.72),rgba(9,9,19,0.94))]" />
+        <div className="ambient-layer absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-teal-500/10 blur-3xl" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(37,99,235,0.16),transparent_35%),radial-gradient(circle_at_80%_16%,rgba(34,211,238,0.11),transparent_33%),linear-gradient(180deg,rgba(9,9,19,0.72),rgba(9,9,19,0.94))]" />
       </div>
 
       <div className="relative mx-auto max-w-[1520px] space-y-6 p-5 md:p-6 xl:px-10">
         <section className="panel rounded-3xl border border-white/10 bg-white/[0.03] p-5 shadow-2xl shadow-black/20 backdrop-blur-sm md:p-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-violet-200">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-200">
                 <Sparkles size={12} /> Command Operations
               </div>
               <h1 className="mt-2 text-2xl font-black tracking-tight text-white md:text-4xl">Command Center</h1>
@@ -149,7 +149,7 @@ export function Dashboard() {
               </button>
               <button
                 onClick={() => navigate('/workflows')}
-                className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-600/20 transition-colors hover:bg-violet-500"
+                className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition-colors hover:bg-blue-500"
               >
                 <ArrowRight size={14} />
                 New Pipeline
@@ -159,11 +159,11 @@ export function Dashboard() {
 
           <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             <StatCard
-              icon={<Network size={16} className="text-violet-300" />}
+              icon={<Network size={16} className="text-blue-300" />}
               value={stats.total}
               label="Total Pipelines"
               helper="Registered orchestration flows"
-              accent="from-violet-500 to-cyan-500"
+              accent="from-blue-500 to-cyan-500"
             />
             <StatCard
               icon={<Activity size={16} className="text-sky-300" />}
@@ -172,25 +172,25 @@ export function Dashboard() {
               helper="Currently active in runtime"
               badge="Live"
               badgeTone="border-sky-500/30 bg-sky-500/15 text-sky-200"
-              accent="from-sky-500 to-cyan-500"
+              accent="from-teal-500 to-cyan-500"
             />
             <StatCard
-              icon={<AlertTriangle size={16} className="text-amber-300" />}
+              icon={<AlertTriangle size={16} className="text-cyan-300" />}
               value={stats.failedRuns}
               label="Execution Failures"
               helper="Runs requiring attention"
               badge="Review"
-              badgeTone="border-amber-500/30 bg-amber-500/15 text-amber-200"
-              accent="from-amber-500 to-fuchsia-500"
+              badgeTone="border-cyan-500/30 bg-cyan-500/15 text-amber-200"
+              accent="from-blue-500 to-cyan-500"
             />
             <StatCard
-              icon={<Clock3 size={16} className="text-fuchsia-300" />}
+              icon={<Clock3 size={16} className="text-teal-300" />}
               value={stats.draft}
               label="In Development"
               helper="Draft pipelines pending launch"
               badge={`${stats.draft} pending`}
-              badgeTone="border-fuchsia-500/30 bg-fuchsia-500/15 text-fuchsia-200"
-              accent="from-fuchsia-500 to-violet-500"
+              badgeTone="border-teal-500/30 bg-teal-500/15 text-teal-200"
+              accent="from-cyan-500 to-teal-500"
             />
           </div>
         </section>
@@ -205,7 +205,7 @@ export function Dashboard() {
                 </div>
                 <button
                   onClick={() => navigate('/workflows')}
-                  className="text-[11px] font-semibold uppercase tracking-[0.16em] text-violet-300 transition-colors hover:text-violet-200"
+                  className="text-[11px] font-semibold uppercase tracking-[0.16em] text-blue-300 transition-colors hover:text-blue-200"
                 >
                   Explore all
                 </button>
@@ -217,7 +217,7 @@ export function Dashboard() {
                 No pipelines deployed yet.
                 <button
                   onClick={() => navigate('/workflows')}
-                  className="ml-2 text-violet-300 underline underline-offset-2 hover:text-violet-200"
+                  className="ml-2 text-blue-300 underline underline-offset-2 hover:text-blue-200"
                 >
                   Create your first
                 </button>
@@ -239,8 +239,8 @@ export function Dashboard() {
                       <tr key={wf.id} className="group transition-colors hover:bg-white/[0.03]">
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-violet-500/25 bg-violet-500/10">
-                              <Network size={14} className="text-violet-300" />
+                            <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-blue-500/25 bg-blue-500/10">
+                              <Network size={14} className="text-blue-300" />
                             </div>
                             <span className="text-sm font-medium text-white/85">{wf.name}</span>
                           </div>
@@ -250,7 +250,7 @@ export function Dashboard() {
                             className={clsx(
                               'inline-flex rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em]',
                               wf.status === 'active'
-                                ? 'border-emerald-500/30 bg-emerald-500/12 text-emerald-200'
+                                ? 'border-teal-500/30 bg-teal-500/12 text-emerald-200'
                                 : 'border-white/10 bg-white/5 text-white/45'
                             )}
                           >
@@ -263,7 +263,7 @@ export function Dashboard() {
                         <td className="px-6 py-4">
                           <button
                             onClick={() => navigate(`/workflows/${wf.id}/edit`)}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-[11px] text-white/65 transition-colors hover:border-violet-500/30 hover:bg-violet-500/12 hover:text-violet-200"
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-[11px] text-white/65 transition-colors hover:border-blue-500/30 hover:bg-blue-500/12 hover:text-blue-200"
                           >
                             <Pencil size={12} />
                             Edit

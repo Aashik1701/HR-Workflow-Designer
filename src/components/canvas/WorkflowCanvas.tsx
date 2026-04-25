@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import {
   ReactFlow,
   Background,
@@ -12,6 +12,9 @@ import {
 import '@xyflow/react/dist/style.css';
 
 import { useWorkflowStore } from '../../store/workflowStore';
+import { useParams } from 'react-router-dom';
+import { useMultiplayer } from '../../hooks/useMultiplayer';
+import { LiveCursors } from '../multiplayer/LiveCursors';
 import { AICopilot } from './AICopilot';
 import { StartNode } from '../nodes/StartNode';
 import { TaskNode } from '../nodes/TaskNode';
@@ -45,6 +48,19 @@ export function WorkflowCanvas({ dark }: WorkflowCanvasProps) {
     setSelectedNodeId,
   } = useWorkflowStore();
   const { screenToFlowPosition } = useReactFlow();
+  const { id } = useParams<{ id: string }>();
+  const { broadcastCursor } = useMultiplayer(id);
+
+  // Throttle cursor broadcasting to avoid swamping the socket
+  const lastBroadcast = useRef(0);
+  const onPaneMouseMove = useCallback((e: React.MouseEvent) => {
+    const now = Date.now();
+    if (now - lastBroadcast.current > 50) { // ~20fps broadcast
+      const position = screenToFlowPosition({ x: e.clientX, y: e.clientY });
+      broadcastCursor(position.x, position.y);
+      lastBroadcast.current = now;
+    }
+  }, [screenToFlowPosition, broadcastCursor]);
 
   const onConnect = useCallback(
     (connection: Connection) => {
@@ -91,7 +107,7 @@ export function WorkflowCanvas({ dark }: WorkflowCanvasProps) {
   const onPaneClick = useCallback(() => setSelectedNodeId(null), [setSelectedNodeId]);
 
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full relative">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -102,6 +118,7 @@ export function WorkflowCanvas({ dark }: WorkflowCanvasProps) {
         onDragOver={onDragOver}
         onNodeClick={onNodeClick}
         onPaneClick={onPaneClick}
+        onPaneMouseMove={onPaneMouseMove}
         nodeTypes={nodeTypes}
         fitView
         fitViewOptions={{ padding: 0.2 }}
@@ -134,6 +151,7 @@ export function WorkflowCanvas({ dark }: WorkflowCanvasProps) {
           style={dark ? { background: '#1a1a2e', borderColor: '#ffffff10' } : undefined}
           className="!rounded-xl !shadow-md"
         />
+        <LiveCursors />
         <AICopilot />
       </ReactFlow>
     </div>

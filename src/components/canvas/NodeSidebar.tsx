@@ -49,7 +49,7 @@ export function NodeSidebar({ dark }: NodeSidebarProps) {
             className={clsx(
               'flex items-center gap-2 p-2.5 rounded-lg border cursor-grab active:cursor-grabbing transition-all',
               dark
-                ? 'bg-white/5 border-white/5 hover:border-violet-500/30 hover:bg-white/10'
+                ? 'bg-white/5 border-white/5 hover:border-blue-500/30 hover:bg-white/10'
                 : 'bg-white border-slate-200 hover:border-indigo-300 hover:shadow-sm'
             )}
           >

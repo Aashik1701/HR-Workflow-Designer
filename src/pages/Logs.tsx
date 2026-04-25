@@ -221,16 +221,16 @@ export function Logs() {
   return (
     <div className="relative min-h-full overflow-hidden bg-[#090913] text-white">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-24 right-0 h-80 w-80 rounded-full bg-violet-600/15 blur-3xl" />
+        <div className="absolute -top-24 right-0 h-80 w-80 rounded-full bg-blue-600/15 blur-3xl" />
         <div className="absolute left-1/4 top-40 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl" />
-        <div className="absolute bottom-0 right-1/3 h-72 w-72 rounded-full bg-fuchsia-500/10 blur-3xl" />
+        <div className="absolute bottom-0 right-1/3 h-72 w-72 rounded-full bg-teal-500/10 blur-3xl" />
       </div>
 
       <div className="relative mx-auto max-w-7xl space-y-6 p-5 md:p-6">
         <section className="rounded-3xl border border-white/10 bg-white/[0.03] p-5 shadow-2xl shadow-black/20 backdrop-blur-sm md:p-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-violet-200">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-200">
                 <Sparkles size={12} /> Simulation Intelligence
               </div>
               <h1 className="mt-2 text-2xl font-black tracking-tight text-white md:text-4xl">
@@ -250,7 +250,7 @@ export function Logs() {
                 <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
                 Refresh
               </button>
-              <button className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-600/20 transition-colors hover:bg-violet-500">
+              <button className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition-colors hover:bg-blue-500">
                 <ArrowUpRight size={14} />
                 Export Insights
               </button>
@@ -263,28 +263,28 @@ export function Logs() {
               value={totals.total.toString()}
               helper="All simulation executions"
               icon={History}
-              accent="from-violet-500 to-cyan-500"
+              accent="from-blue-500 to-cyan-500"
             />
             <MetricCard
               label="Success Rate"
               value={`${totals.successRate}%`}
               helper={`${totals.passed} passed / ${totals.failed} failed`}
               icon={TrendingUp}
-              accent="from-emerald-500 to-cyan-500"
+              accent="from-teal-500 to-cyan-500"
             />
             <MetricCard
               label="Avg Duration"
               value={totals.avgDuration ? formatDuration(totals.avgDuration) : '0ms'}
               helper={`Typical run falls in ${getDurationBand(totals.avgDuration)}`}
               icon={TimerReset}
-              accent="from-amber-500 to-fuchsia-500"
+              accent="from-blue-500 to-cyan-500"
             />
             <MetricCard
               label="Avg Steps"
               value={totals.avgSteps}
               helper="Mean nodes executed per run"
               icon={Layers3}
-              accent="from-sky-500 to-violet-500"
+              accent="from-blue-400 to-teal-400"
             />
           </div>
         </section>
@@ -299,7 +299,7 @@ export function Logs() {
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
                     placeholder="Search workflow name or run id"
-                    className="w-full rounded-2xl border border-white/10 bg-[#0d0d18] py-3 pl-10 pr-4 text-sm text-white placeholder:text-white/30 outline-none transition focus:border-violet-500/40"
+                    className="w-full rounded-2xl border border-white/10 bg-[#0d0d18] py-3 pl-10 pr-4 text-sm text-white placeholder:text-white/30 outline-none transition focus:border-blue-500/40"
                   />
                 </div>
 
@@ -314,7 +314,7 @@ export function Logs() {
                       className={clsx(
                         'rounded-full border px-3 py-2 text-xs font-medium capitalize transition-colors',
                         statusFilter === option
-                          ? 'border-violet-500/30 bg-violet-500/15 text-violet-200'
+                          ? 'border-blue-500/30 bg-blue-500/15 text-blue-200'
                           : 'border-white/10 bg-white/5 text-white/50 hover:bg-white/10 hover:text-white'
                       )}
                     >
@@ -365,7 +365,7 @@ export function Logs() {
                         </div>
                         <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/5">
                           <div
-                            className="h-full rounded-full bg-gradient-to-r from-violet-500 to-cyan-400"
+                            className="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-400"
                             style={{ width: `${Math.max(18, (workflow.runs / Math.max(1, logs.length)) * 100)}%` }}
                           />
                         </div>
@@ -381,13 +381,13 @@ export function Logs() {
                     <h2 className="text-sm font-semibold text-white">Insight pulse</h2>
                     <p className="text-xs text-white/35">Operational signals from your simulation history</p>
                   </div>
-                  <div className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-emerald-200">
+                  <div className="rounded-full border border-teal-500/20 bg-teal-500/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-emerald-200">
                     Live
                   </div>
                 </div>
                 <div className="space-y-3">
                   <div className="rounded-2xl border border-white/10 bg-[#0d0d18] p-4">
-                    <div className="flex items-center gap-2 text-emerald-300">
+                    <div className="flex items-center gap-2 text-teal-300">
                       <CheckCircle2 size={14} />
                       <span className="text-xs font-semibold uppercase tracking-[0.18em]">Performance</span>
                     </div>
@@ -398,7 +398,7 @@ export function Logs() {
                     </p>
                   </div>
                   <div className="rounded-2xl border border-white/10 bg-[#0d0d18] p-4">
-                    <div className="flex items-center gap-2 text-amber-300">
+                    <div className="flex items-center gap-2 text-cyan-300">
                       <AlertTriangle size={14} />
                       <span className="text-xs font-semibold uppercase tracking-[0.18em]">Watchlist</span>
                     </div>
@@ -437,7 +437,7 @@ export function Logs() {
               {loading ? (
                 <div className="px-5 py-14 text-center">
                   <div className="mx-auto flex max-w-xs flex-col items-center gap-3 text-white/35">
-                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-violet-500 border-t-transparent" />
+                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
                     <p className="text-sm">Loading simulation logs...</p>
                   </div>
                 </div>
@@ -457,17 +457,17 @@ export function Logs() {
                         onClick={() => setSelectedLogId(log.id)}
                         className={clsx(
                           'grid w-full grid-cols-1 gap-4 px-5 py-4 text-left transition-colors md:grid-cols-[1.2fr_0.7fr_0.5fr_0.5fr_0.6fr_0.8fr]',
-                          isSelected ? 'bg-violet-500/10' : 'hover:bg-white/[0.03]'
+                          isSelected ? 'bg-blue-500/10' : 'hover:bg-white/[0.03]'
                         )}
                       >
                         <div>
                           <div className="flex items-center gap-2">
                             {log.success ? (
-                              <CheckCircle2 size={14} className="text-emerald-400" />
+                              <CheckCircle2 size={14} className="text-teal-400" />
                             ) : (
                               <XCircle size={14} className="text-red-400" />
                             )}
-                            <span className={clsx('text-sm font-medium', log.success ? 'text-emerald-300' : 'text-red-300')}>
+                            <span className={clsx('text-sm font-medium', log.success ? 'text-teal-300' : 'text-red-300')}>
                               {log.success ? 'Passed' : 'Failed'}
                             </span>
                           </div>
@@ -537,7 +537,7 @@ export function Logs() {
                   <div className="grid grid-cols-2 gap-3">
                     <div className="rounded-2xl border border-white/10 bg-[#0d0d18] p-4">
                       <p className="text-[10px] uppercase tracking-[0.18em] text-white/35">Outcome</p>
-                      <p className={clsx('mt-2 text-sm font-medium', selectedLog.success ? 'text-emerald-300' : 'text-red-300')}>
+                      <p className={clsx('mt-2 text-sm font-medium', selectedLog.success ? 'text-teal-300' : 'text-red-300')}>
                         {selectedLog.success ? 'Successful run' : 'Failed run'}
                       </p>
                     </div>
@@ -565,7 +565,7 @@ export function Logs() {
                                 <p className="text-sm font-medium text-white">{step.title}</p>
                                 <p className="mt-1 text-xs text-white/40">{step.type}</p>
                               </div>
-                              <span className={clsx('rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-wider', step.status === 'success' ? 'bg-emerald-500/10 text-emerald-300' : 'bg-red-500/10 text-red-300')}>
+                              <span className={clsx('rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-wider', step.status === 'success' ? 'bg-teal-500/10 text-teal-300' : 'bg-red-500/10 text-red-300')}>
                                 {step.status}
                               </span>
                             </div>
@@ -580,7 +580,7 @@ export function Logs() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-violet-500/10 to-cyan-500/10 p-4">
+                  <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 p-4">
                     <p className="text-[10px] uppercase tracking-[0.18em] text-white/35">Error summary</p>
                     {selectedLog.errors.length > 0 ? (
                       <ul className="mt-3 space-y-2 text-sm text-white/75">
@@ -600,7 +600,7 @@ export function Logs() {
 
             <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-5 shadow-2xl shadow-black/20 backdrop-blur-sm">
               <div className="flex items-center gap-2 text-white/80">
-                <Sparkles size={15} className="text-violet-300" />
+                <Sparkles size={15} className="text-blue-300" />
                 <h2 className="text-sm font-semibold text-white">Operational highlights</h2>
               </div>
               <div className="mt-4 space-y-3 text-sm text-white/60">

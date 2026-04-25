@@ -126,7 +126,7 @@ export function Sidebar() {
           onClick={handleCreatePipeline}
           disabled={creatingNew || creatingPlayground}
           className={clsx(
-            'w-full flex items-center gap-2.5 rounded-xl border border-violet-500/25 bg-violet-500/12 px-3 py-2.5 text-xs font-semibold text-violet-100 transition-colors hover:bg-violet-500/20 disabled:opacity-60 relative group',
+            'w-full flex items-center gap-2.5 rounded-xl border border-blue-500/25 bg-blue-500/12 px-3 py-2.5 text-xs font-semibold text-blue-100 transition-colors hover:bg-blue-500/20 disabled:opacity-60 relative group',
             collapsed && 'justify-center px-0'
           )}
         >

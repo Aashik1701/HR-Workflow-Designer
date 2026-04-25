@@ -79,12 +79,12 @@ export function AppShell() {
                 aria-haspopup="menu"
                 aria-expanded={profileMenuOpen}
               >
-                <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-600 flex items-center justify-center text-[11px] md:text-[12px] font-extrabold flex-shrink-0 shadow-[0_0_15px_rgba(217,70,239,0.3)] text-white ring-2 ring-[#080811] group-hover:scale-105 transition-transform">
+                <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-gradient-to-br from-indigo-500 to-teal-600 flex items-center justify-center text-[11px] md:text-[12px] font-extrabold flex-shrink-0 shadow-[0_0_15px_rgba(20,184,166,0.3)] text-white ring-2 ring-[#080811] group-hover:scale-105 transition-transform">
                   MA
                 </div>
                 <div className="min-w-0 max-w-[170px] md:max-w-[210px] text-left leading-tight">
-                  <p className="text-[12px] md:text-[13px] font-bold text-white truncate group-hover:text-fuchsia-100 transition-colors">Mohammed Aashik</p>
-                  <p className="text-[9px] md:text-[10px] text-fuchsia-400/80 font-medium tracking-wide truncate">WORKSPACE ADMIN</p>
+                  <p className="text-[12px] md:text-[13px] font-bold text-white truncate group-hover:text-teal-100 transition-colors">Mohammed Aashik</p>
+                  <p className="text-[9px] md:text-[10px] text-teal-400/80 font-medium tracking-wide truncate">WORKSPACE ADMIN</p>
                 </div>
                 <ChevronDown size={14} className={"text-white/45 transition-transform group-hover:text-white/70 " + (profileMenuOpen ? 'rotate-180' : '')} />
               </button>

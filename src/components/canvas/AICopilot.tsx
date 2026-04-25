@@ -108,15 +108,15 @@ export function AICopilot() {
         <div
           className={`absolute -inset-1 rounded-full blur transition-all duration-700 ${
             generating
-              ? 'opacity-70 bg-gradient-to-r from-fuchsia-600 via-violet-600 to-sky-600 animate-pulse'
-              : 'opacity-25 group-hover:opacity-50 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-sky-600'
+              ? 'opacity-70 bg-gradient-to-r from-teal-600 via-blue-600 to-sky-600 animate-pulse'
+              : 'opacity-25 group-hover:opacity-50 bg-gradient-to-r from-blue-600 via-teal-600 to-sky-600'
           }`}
         />
 
         {/* Input pill */}
         <div className="relative bg-[#1a1a2e]/90 backdrop-blur-md border border-white/10 rounded-full flex items-center p-2 shadow-2xl">
           {/* Sparkle / Wand icon */}
-          <div className="pl-3 pr-2 text-violet-400 flex-shrink-0">
+          <div className="pl-3 pr-2 text-blue-400 flex-shrink-0">
             {generating ? (
               <Loader2 size={20} className="animate-spin" />
             ) : hasKey ? (
@@ -156,7 +156,7 @@ export function AICopilot() {
           <button
             onClick={handleGenerate}
             disabled={generating || !prompt.trim()}
-            className="bg-violet-600 hover:bg-violet-500 disabled:bg-white/5 disabled:text-white/30 disabled:cursor-not-allowed text-white rounded-full p-2 transition-colors flex items-center justify-center flex-shrink-0"
+            className="bg-blue-600 hover:bg-blue-500 disabled:bg-white/5 disabled:text-white/30 disabled:cursor-not-allowed text-white rounded-full p-2 transition-colors flex items-center justify-center flex-shrink-0"
             title="Generate workflow"
           >
             <ArrowRight size={16} />

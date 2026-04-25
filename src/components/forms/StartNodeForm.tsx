@@ -110,7 +110,7 @@ export function StartNodeForm({ nodeId, data }: Props) {
         <div className="mb-2">
           <span className="text-xs font-medium text-white/70">Initial Payload Variables</span>
           <p className="text-[10px] text-white/40 mt-0.5 leading-tight">
-            Define key-value pairs here to pass data into the pipeline. You can reference these downstream using <span className="font-mono text-fuchsia-400 bg-fuchsia-500/10 px-1 rounded">{'{{ key }}'}</span> syntax.
+            Define key-value pairs here to pass data into the pipeline. You can reference these downstream using <span className="font-mono text-teal-400 bg-teal-500/10 px-1 rounded">{'{{ key }}'}</span> syntax.
           </p>
         </div>
         <KeyValueEditor

@@ -78,7 +78,7 @@ export function TaskNodeForm({ nodeId, data }: Props) {
       <div>
         <div className="flex items-center justify-between mb-1">
           <label className="block text-xs font-medium text-white/70">Assignee</label>
-          <span className="text-[9px] text-fuchsia-400/80 font-mono bg-fuchsia-500/10 px-1.5 py-0.5 rounded" title="You can inject variables from the Start payload using {{ key }} syntax">Supports {'{{ var }}'}</span>
+          <span className="text-[9px] text-teal-400/80 font-mono bg-teal-500/10 px-1.5 py-0.5 rounded" title="You can inject variables from the Start payload using {{ key }} syntax">Supports {'{{ var }}'}</span>
         </div>
         <input {...register('assignee')} className={inputClass} placeholder="e.g., {{ employee.managerEmail }}" />
       </div>

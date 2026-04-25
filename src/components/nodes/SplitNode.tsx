@@ -38,12 +38,12 @@ export function SplitNode({ id, selected, data }: NodeProps<SplitFlowNode>) {
             </div>
             <span className="text-[11px] font-bold text-cyan-300 tabular-nums">{pctA}%</span>
           </div>
-          <div className="flex items-center justify-between gap-2 rounded-lg bg-fuchsia-500/10 border border-fuchsia-500/20 px-2.5 py-1.5">
+          <div className="flex items-center justify-between gap-2 rounded-lg bg-teal-500/10 border border-teal-500/20 px-2.5 py-1.5">
             <div className="flex items-center gap-1.5">
-              <span className="text-[9px] font-black text-fuchsia-300 uppercase tracking-widest w-4">B</span>
+              <span className="text-[9px] font-black text-teal-300 uppercase tracking-widest w-4">B</span>
               <span className="text-[10px] text-white/65 truncate max-w-[80px]">{d.pathBLabel || 'Path B'}</span>
             </div>
-            <span className="text-[11px] font-bold text-fuchsia-300 tabular-nums">{pctB}%</span>
+            <span className="text-[11px] font-bold text-teal-300 tabular-nums">{pctB}%</span>
           </div>
         </div>
       </BaseNode>
@@ -62,7 +62,7 @@ export function SplitNode({ id, selected, data }: NodeProps<SplitFlowNode>) {
         id="pathB"
         position={Position.Bottom}
         style={{ left: '72%' }}
-        className="!w-2.5 !h-2.5 !border-2 !border-[#181828] !bg-fuchsia-400/70 hover:!bg-fuchsia-400 transition-colors"
+        className="!w-2.5 !h-2.5 !border-2 !border-[#181828] !bg-teal-400/70 hover:!bg-teal-400 transition-colors"
         title="Path B"
       />
     </div>

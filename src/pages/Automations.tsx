@@ -29,9 +29,9 @@ type SortMode = 'recommended' | 'label' | 'category' | 'sla';
 
 const CATEGORY_META: Record<AutomationRow['category'], { label: string; tone: string; icon: LucideIcon }> = {
   communication: { label: 'Communication', tone: 'from-sky-500/20 to-cyan-500/10 text-sky-300', icon: Activity },
-  documents: { label: 'Documents', tone: 'from-amber-500/20 to-orange-500/10 text-amber-300', icon: FileText },
-  integrations: { label: 'Integrations', tone: 'from-violet-500/20 to-fuchsia-500/10 text-violet-300', icon: Globe },
-  database: { label: 'Data Ops', tone: 'from-emerald-500/20 to-teal-500/10 text-emerald-300', icon: Database },
+  documents: { label: 'Documents', tone: 'from-amber-500/20 to-orange-500/10 text-cyan-300', icon: FileText },
+  integrations: { label: 'Integrations', tone: 'from-blue-500/20 to-teal-500/10 text-blue-300', icon: Globe },
+  database: { label: 'Data Ops', tone: 'from-emerald-500/20 to-teal-500/10 text-teal-300', icon: Database },
   productivity: { label: 'Productivity', tone: 'from-pink-500/20 to-rose-500/10 text-pink-300', icon: Layers3 },
   general: { label: 'General', tone: 'from-white/15 to-white/5 text-white/60', icon: Code2 },
 };
@@ -83,11 +83,11 @@ function AutomationCard({
       className={clsx(
         'premium-lift premium-shine group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border p-6 text-left transition-all duration-300',
         active
-          ? 'border-violet-500/40 bg-violet-500/10 shadow-xl shadow-violet-950/20'
+          ? 'border-blue-500/40 bg-blue-500/10 shadow-xl shadow-blue-950/20'
           : 'border-white/10 bg-white/[0.03] hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.05]'
       )}
     >
-      <div className="absolute inset-0 transition-opacity duration-500 opacity-0 bg-gradient-to-br from-violet-500/0 via-cyan-500/0 to-fuchsia-500/0 group-hover:opacity-100" />
+      <div className="absolute inset-0 transition-opacity duration-500 opacity-0 bg-gradient-to-br from-blue-500/0 via-cyan-500/0 to-teal-500/0 group-hover:opacity-100" />
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
           <div className={clsx('rounded-2xl border p-3 shadow-lg', meta.tone)}>
@@ -95,7 +95,7 @@ function AutomationCard({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-semibold text-white transition-colors group-hover:text-violet-200">
+              <h3 className="text-sm font-semibold text-white transition-colors group-hover:text-blue-200">
                 {automation.label}
               </h3>
               <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] uppercase tracking-wider text-white/45">
@@ -145,7 +145,7 @@ function AutomationCard({
             event.stopPropagation();
             onGenerate();
           }}
-          className="inline-flex items-center gap-1.5 rounded-xl border border-violet-500/20 bg-violet-500/10 px-3 py-2 text-xs font-medium text-violet-200 transition-colors hover:bg-violet-500/20"
+          className="inline-flex items-center gap-1.5 rounded-xl border border-blue-500/20 bg-blue-500/10 px-3 py-2 text-xs font-medium text-blue-200 transition-colors hover:bg-blue-500/20"
         >
           Build template
           <ArrowRight size={12} />
@@ -441,7 +441,7 @@ export function Automations() {
           inset: 0;
           border-radius: inherit;
           border: 1px solid rgba(255,255,255,0.06);
-          background: radial-gradient(circle at 30% 10%, rgba(124,58,237,0.1) 0%, transparent 42%);
+          background: radial-gradient(circle at 30% 10%, rgba(37,99,235,0.1) 0%, transparent 42%);
           pointer-events: none;
         }
         @media (pointer: coarse), (prefers-reduced-motion: reduce) {
@@ -460,10 +460,10 @@ export function Automations() {
         }
       `}</style>
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute left-0 rounded-full cinematic-layer -top-24 h-80 w-80 bg-violet-600/15 blur-3xl" />
+        <div className="absolute left-0 rounded-full cinematic-layer -top-24 h-80 w-80 bg-blue-600/15 blur-3xl" />
         <div className="absolute right-0 rounded-full cinematic-layer-reverse top-20 h-96 w-96 bg-cyan-500/10 blur-3xl" />
-        <div className="absolute bottom-0 rounded-full cinematic-layer left-1/3 h-72 w-72 bg-fuchsia-500/10 blur-3xl" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(124,58,237,0.16),transparent_35%),radial-gradient(circle_at_80%_16%,rgba(34,211,238,0.12),transparent_33%),linear-gradient(180deg,rgba(9,9,19,0.72),rgba(9,9,19,0.94))]" />
+        <div className="absolute bottom-0 rounded-full cinematic-layer left-1/3 h-72 w-72 bg-teal-500/10 blur-3xl" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(37,99,235,0.16),transparent_35%),radial-gradient(circle_at_80%_16%,rgba(34,211,238,0.12),transparent_33%),linear-gradient(180deg,rgba(9,9,19,0.72),rgba(9,9,19,0.94))]" />
         <div className="absolute inset-0 opacity-[0.14] [background-image:linear-gradient(rgba(255,255,255,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.07)_1px,transparent_1px)] [background-size:56px_56px]" />
       </div>
 
@@ -471,7 +471,7 @@ export function Automations() {
         <section className="cinematic-panel rounded-3xl border border-white/10 bg-white/[0.03] p-5 shadow-2xl shadow-black/20 backdrop-blur-sm md:p-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-violet-200">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-200">
                 <Sparkles size={12} /> Automation Foundry
               </div>
               <h1 className="mt-2 text-2xl font-black tracking-tight hero-gradient-title md:text-4xl">
@@ -490,7 +490,7 @@ export function Automations() {
                 <ArrowRight size={14} />
                 Go to Dashboard
               </button>
-              <button className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-600/20 transition-colors hover:bg-violet-500">
+              <button className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition-colors hover:bg-blue-500">
                 <Zap size={14} />
                 Browse templates
               </button>
@@ -503,28 +503,28 @@ export function Automations() {
               value={automations.length.toString()}
               helper="Ready-to-generate automation blocks"
               icon={Zap}
-              accent="from-violet-500 to-cyan-500"
+              accent="from-blue-500 to-cyan-500"
             />
             <StatCard
               label="Category mix"
               value={Object.keys(categoryCounts).filter((key) => key !== 'all').length.toString()}
               helper="Distinct automation families"
               icon={Layers3}
-              accent="from-emerald-500 to-cyan-500"
+              accent="from-teal-500 to-cyan-500"
             />
             <StatCard
               label="Avg params"
               value={averageParams}
               helper="Typical config depth per action"
               icon={FileText}
-              accent="from-amber-500 to-fuchsia-500"
+              accent="from-blue-500 to-cyan-500"
             />
             <StatCard
               label="Template speed"
               value={creating ? 'Busy' : 'Fast'}
               helper="Create a workflow from any action"
               icon={Clock3}
-              accent="from-sky-500 to-violet-500"
+              accent="from-blue-400 to-teal-400"
             />
           </div>
 
@@ -536,20 +536,20 @@ export function Automations() {
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setActiveOnly((value) => !value)}
-                className={clsx('rounded-full border px-3 py-1.5 text-xs font-medium transition-colors', activeOnly ? 'border-emerald-400/30 bg-emerald-500/15 text-emerald-200' : 'border-white/10 bg-white/5 text-white/50 hover:text-white')}
+                className={clsx('rounded-full border px-3 py-1.5 text-xs font-medium transition-colors', activeOnly ? 'border-emerald-400/30 bg-teal-500/15 text-emerald-200' : 'border-white/10 bg-white/5 text-white/50 hover:text-white')}
               >
                 Active only
               </button>
               <button
                 onClick={() => setPriorityOnly((value) => !value)}
-                className={clsx('rounded-full border px-3 py-1.5 text-xs font-medium transition-colors', priorityOnly ? 'border-amber-400/30 bg-amber-500/15 text-amber-200' : 'border-white/10 bg-white/5 text-white/50 hover:text-white')}
+                className={clsx('rounded-full border px-3 py-1.5 text-xs font-medium transition-colors', priorityOnly ? 'border-amber-400/30 bg-cyan-500/15 text-amber-200' : 'border-white/10 bg-white/5 text-white/50 hover:text-white')}
               >
                 Priority ≥ 85
               </button>
             </div>
             <button
               onClick={() => searchRef.current?.focus()}
-              className="inline-flex items-center justify-center px-3 py-2 text-xs font-semibold transition-colors border rounded-xl border-violet-500/25 bg-violet-500/10 text-violet-200 hover:bg-violet-500/20"
+              className="inline-flex items-center justify-center px-3 py-2 text-xs font-semibold transition-colors border rounded-xl border-blue-500/25 bg-blue-500/10 text-blue-200 hover:bg-blue-500/20"
             >
               Focus search /
             </button>
@@ -566,7 +566,7 @@ export function Automations() {
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
                     placeholder="Search actions, nodes, or runbook signals"
-                    className="w-full rounded-2xl border border-white/10 bg-[#0d0d18] px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none transition focus:border-violet-500/40"
+                    className="w-full rounded-2xl border border-white/10 bg-[#0d0d18] px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none transition focus:border-blue-500/40"
                   />
                 </div>
 
@@ -584,7 +584,7 @@ export function Automations() {
                         className={clsx(
                           'shrink-0 whitespace-nowrap rounded-full border px-3 py-2 text-xs font-medium capitalize transition-colors',
                           categoryFilter === option
-                            ? 'border-violet-500/30 bg-violet-500/15 text-violet-200'
+                            ? 'border-blue-500/30 bg-blue-500/15 text-blue-200'
                             : 'border-white/10 bg-white/5 text-white/50 hover:bg-white/10 hover:text-white'
                         )}
                       >
@@ -640,7 +640,7 @@ export function Automations() {
                         </div>
                         <div className="h-2 mt-3 overflow-hidden rounded-full bg-white/5">
                           <div
-                            className="h-full rounded-full bg-gradient-to-r from-violet-500 to-cyan-400"
+                            className="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-400"
                             style={{ width: `${pct}%` }}
                           />
                         </div>
@@ -656,13 +656,13 @@ export function Automations() {
                     <h2 className="text-sm font-semibold text-white">Automation readiness</h2>
                     <p className="text-xs text-white/35">Insights from the current catalog</p>
                   </div>
-                  <div className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-emerald-200">
+                  <div className="rounded-full border border-teal-500/20 bg-teal-500/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-emerald-200">
                     Live
                   </div>
                 </div>
                 <div className="space-y-3">
                   <div className="premium-lift rounded-2xl border border-white/10 bg-[#0d0d18] p-4">
-                    <div className="flex items-center gap-2 text-violet-300">
+                    <div className="flex items-center gap-2 text-blue-300">
                       <CheckCircle2 size={14} />
                       <span className="text-xs font-semibold uppercase tracking-[0.18em]">Template coverage</span>
                     </div>
@@ -682,7 +682,7 @@ export function Automations() {
                     </p>
                   </div>
                   <div className="premium-lift rounded-2xl border border-white/10 bg-[#0d0d18] p-4">
-                    <div className="flex items-center gap-2 text-amber-300">
+                    <div className="flex items-center gap-2 text-cyan-300">
                       <BarChart3 size={14} />
                       <span className="text-xs font-semibold uppercase tracking-[0.18em]">Generation momentum</span>
                     </div>
@@ -710,7 +710,7 @@ export function Automations() {
               {loading ? (
                 <div className="px-5 text-center py-14">
                   <div className="flex flex-col items-center max-w-xs gap-3 mx-auto text-white/35">
-                    <div className="w-6 h-6 border-2 rounded-full animate-spin border-violet-500 border-t-transparent" />
+                    <div className="w-6 h-6 border-2 rounded-full animate-spin border-blue-500 border-t-transparent" />
                     <p className="text-sm">Loading automations...</p>
                   </div>
                 </div>
@@ -764,7 +764,7 @@ export function Automations() {
                         <h3 className="mt-2 text-lg font-semibold text-white break-words">{selectedAutomation.label}</h3>
                         <p className="mt-2 text-sm text-white/45 break-words">{selectedAutomation.description}</p>
                       </div>
-                      <span className={clsx('rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider', selectedAutomation.is_active ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-200' : 'border-white/10 bg-white/5 text-white/35')}>
+                      <span className={clsx('rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider', selectedAutomation.is_active ? 'border-teal-500/20 bg-teal-500/10 text-emerald-200' : 'border-white/10 bg-white/5 text-white/35')}>
                         {selectedAutomation.is_active ? 'Active' : 'Inactive'}
                       </span>
                     </div>
@@ -795,7 +795,7 @@ export function Automations() {
                     </div>
                   </div>
 
-                  <div className="p-4 border premium-lift rounded-2xl border-white/10 bg-gradient-to-br from-violet-500/10 to-cyan-500/10">
+                  <div className="p-4 border premium-lift rounded-2xl border-white/10 bg-gradient-to-br from-blue-500/10 to-cyan-500/10">
                     <p className="text-[10px] uppercase tracking-[0.18em] text-white/35">Next step</p>
                     <p className="mt-2 text-sm text-white/75">
                       Generate a workflow template from this action to get a ready-made Start → Action → End flow.
@@ -803,7 +803,7 @@ export function Automations() {
                     <button
                       onClick={() => handleCreateTemplate(selectedAutomation)}
                       disabled={creating}
-                      className="mt-4 inline-flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-600/20 transition-colors hover:bg-violet-500 disabled:opacity-50"
+                      className="mt-4 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition-colors hover:bg-blue-500 disabled:opacity-50"
                     >
                       <ArrowRight size={14} />
                       {creating ? 'Building...' : 'Generate template'}
@@ -815,7 +815,7 @@ export function Automations() {
 
             <div className="cinematic-panel rounded-3xl border border-white/10 bg-white/[0.03] p-5 shadow-2xl shadow-black/20 backdrop-blur-sm">
               <div className="flex items-center gap-2 text-white/80">
-                <Sparkles size={15} className="text-violet-300" />
+                <Sparkles size={15} className="text-blue-300" />
                 <h2 className="text-sm font-semibold text-white">Command runbook</h2>
               </div>
               <div className="mt-4 space-y-3 text-sm text-white/60">

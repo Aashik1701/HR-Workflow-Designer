@@ -88,7 +88,7 @@ export function AutomatedStepNodeForm({ nodeId, data }: Props) {
         <div className="space-y-2 mt-2 pt-2 border-t border-white/5">
           <div className="flex items-center justify-between mb-2">
             <label className="block text-xs font-medium text-white/70">Action Parameters</label>
-            <span className="text-[9px] text-fuchsia-400/80 font-mono bg-fuchsia-500/10 px-1.5 py-0.5 rounded" title="You can inject variables from the Start payload using {{ key }} syntax">Supports {'{{ var }}'}</span>
+            <span className="text-[9px] text-teal-400/80 font-mono bg-teal-500/10 px-1.5 py-0.5 rounded" title="You can inject variables from the Start payload using {{ key }} syntax">Supports {'{{ var }}'}</span>
           </div>
           {selectedAction.params.map(param => (
             <div key={param}>

@@ -29,7 +29,7 @@ function AnimatedCanvas() {
   const nodes = [
     { id: 'start', x: 60, y: 80, label: 'Start', color: '#10b981', icon: '▶' },
     { id: 'task1', x: 200, y: 40, label: 'Collect Docs', color: '#3b82f6', icon: '□' },
-    { id: 'task2', x: 200, y: 130, label: 'Send Email', color: '#8b5cf6', icon: '⚡' },
+    { id: 'task2', x: 200, y: 130, label: 'Send Email', color: '#3b82f6', icon: '⚡' },
     { id: 'approval', x: 340, y: 80, label: 'HR Approval', color: '#f59e0b', icon: '✓' },
     { id: 'end', x: 480, y: 80, label: 'Complete', color: '#f43f5e', icon: '⚑' },
   ];
@@ -46,7 +46,7 @@ function AnimatedCanvas() {
       <svg width="560" height="200" viewBox="0 0 560 200" style={{ position: 'absolute', inset: 0 }}>
         <defs>
           <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L0,6 L6,3 z" fill="rgba(139,92,246,0.6)" />
+            <path d="M0,0 L0,6 L6,3 z" fill="rgba(59,130,246,0.6)" />
           </marker>
         </defs>
         {edges.map((e, i) => (
@@ -54,7 +54,7 @@ function AnimatedCanvas() {
             key={i}
             x1={e.from[0] + 36} y1={e.from[1] + 14}
             x2={e.to[0]} y2={e.to[1] + 14}
-            stroke="rgba(139,92,246,0.4)" strokeWidth="1.5"
+            stroke="rgba(59,130,246,0.4)" strokeWidth="1.5"
             strokeDasharray="4 3"
             markerEnd="url(#arrow)"
             style={{ animation: `dashDraw 1.5s ${i * 0.2}s ease-out both` }}
@@ -162,7 +162,7 @@ function Section({
 }
 
 // ─── Tag ───────────────────────────────────────────────────────────────────
-function Tag({ children, color = '#a78bfa' }: { children: React.ReactNode; color?: string }) {
+function Tag({ children, color = '#93c5fd' }: { children: React.ReactNode; color?: string }) {
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -247,11 +247,11 @@ export function LandingPage() {
   const BG     = '#07070e';
   const CARD   = 'rgba(255,255,255,0.03)';
   const BORDER = 'rgba(255,255,255,0.07)';
-  const VIOLET = '#7c3aed';
+  const BLUE = '#2563eb';
   const CYAN   = '#06b6d4';
-  const FUCHSIA= '#d946ef';
+  const TEAL = '#14b8a6';
 
-  const grad = `linear-gradient(135deg, ${CYAN}, ${VIOLET}, ${FUCHSIA})`;
+  const grad = `linear-gradient(135deg, ${CYAN}, ${BLUE}, ${TEAL})`;
   const sectionX = 'max(20px, min(32px, calc((100vw - 1200px) / 2)))';
 
   // ── Shared styles ─────────────────────────────────────────────────────────
@@ -271,7 +271,7 @@ export function LandingPage() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800&family=DM+Mono:wght@400;500&display=swap');
         * { box-sizing: border-box; }
-        ::selection { background: rgba(124,58,237,0.4); }
+        ::selection { background: rgba(37,99,235,0.4); }
         .cinematic-root::before {
           content: '';
           position: fixed;
@@ -285,24 +285,24 @@ export function LandingPage() {
         }
         .hover-lift:hover {
           transform: translateY(-4px) scale(1.008) !important;
-          border-color: rgba(124,58,237,0.45) !important;
+          border-color: rgba(37,99,235,0.45) !important;
           background: rgba(255,255,255,0.055) !important;
-          box-shadow: 0 20px 48px rgba(0,0,0,0.28), 0 0 0 1px rgba(124,58,237,0.12) inset;
+          box-shadow: 0 20px 48px rgba(0,0,0,0.28), 0 0 0 1px rgba(37,99,235,0.12) inset;
         }
-        .hover-glow:hover { box-shadow: 0 0 30px rgba(124,58,237,0.45); }
+        .hover-glow:hover { box-shadow: 0 0 30px rgba(37,99,235,0.45); }
         .cta-primary {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 13px 28px; border-radius: 12px; border: none; cursor: pointer;
           font-size: 15px; font-weight: 700; letter-spacing: -0.01em;
-          background: linear-gradient(120deg, #7c3aed 0%, #4f46e5 35%, #0ea5e9 68%, #7c3aed 100%);
+          background: linear-gradient(120deg, #2563eb 0%, #0ea5e9 35%, #0ea5e9 68%, #2563eb 100%);
           background-size: 220% 220%;
           color: #fff; transition: all 0.25s ease;
-          box-shadow: 0 4px 24px rgba(124,58,237,0.4);
+          box-shadow: 0 4px 24px rgba(37,99,235,0.4);
         }
         .cta-primary:hover {
           transform: translateY(-2px);
           background-position: 100% 50%;
-          box-shadow: 0 10px 34px rgba(124,58,237,0.52), 0 0 0 1px rgba(255,255,255,0.08) inset;
+          box-shadow: 0 10px 34px rgba(37,99,235,0.52), 0 0 0 1px rgba(255,255,255,0.08) inset;
         }
         .cta-secondary {
           display: inline-flex; align-items: center; gap: 8px;
@@ -335,7 +335,7 @@ export function LandingPage() {
           transform: scaleX(0);
           transform-origin: center;
           transition: transform 0.24s ease;
-          background: linear-gradient(90deg, rgba(14,165,233,0.9), rgba(124,58,237,0.9));
+          background: linear-gradient(90deg, rgba(14,165,233,0.9), rgba(37,99,235,0.9));
           border-radius: 999px;
         }
         .nav-link:hover { color: #fff; }
@@ -347,9 +347,9 @@ export function LandingPage() {
           color: rgba(255,255,255,0.7); transition: all 0.25s ease;
         }
         .tech-pill:hover {
-          border-color: rgba(124,58,237,0.45);
+          border-color: rgba(37,99,235,0.45);
           color: #fff;
-          background: rgba(124,58,237,0.1);
+          background: rgba(37,99,235,0.1);
           transform: translateY(-2px);
         }
         .premium-gradient-text {
@@ -362,7 +362,7 @@ export function LandingPage() {
         }
         .hero-canvas-wrap:hover {
           transform: perspective(1200px) rotateX(1.6deg) translateY(-4px);
-          box-shadow: 0 46px 120px rgba(0,0,0,0.72), 0 0 0 1px rgba(124,58,237,0.16) inset;
+          box-shadow: 0 46px 120px rgba(0,0,0,0.72), 0 0 0 1px rgba(37,99,235,0.16) inset;
         }
         .micro-stat {
           transition: transform 0.24s ease, filter 0.24s ease;
@@ -477,13 +477,13 @@ export function LandingPage() {
 
       {/* ── AMBIENT BACKGROUND ───────────────────────────────────────── */}
       <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 20% 20%, rgba(124,58,237,0.18) 0, transparent 28%), radial-gradient(circle at 80% 18%, rgba(6,182,212,0.12) 0, transparent 24%), radial-gradient(circle at 50% 78%, rgba(217,70,239,0.12) 0, transparent 25%), linear-gradient(180deg, rgba(7,7,14,0.92) 0%, rgba(7,7,14,0.98) 100%)' }} />
-        <div className="parallax-layer bg-aurora-spin" style={{ position: 'absolute', top: '-38%', left: '24%', width: 'min(76vw, 980px)', height: 'min(76vw, 980px)', borderRadius: '50%', background: 'conic-gradient(from 120deg, rgba(34,211,238,0.12), rgba(124,58,237,0.18), rgba(217,70,239,0.14), rgba(34,211,238,0.12))', filter: 'blur(24px)', opacity: 0.45, transform: 'translate3d(calc(var(--mx, 0) * 18px), calc(var(--my, 0) * 18px), 0)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 20% 20%, rgba(37,99,235,0.18) 0, transparent 28%), radial-gradient(circle at 80% 18%, rgba(6,182,212,0.12) 0, transparent 24%), radial-gradient(circle at 50% 78%, rgba(20,184,166,0.12) 0, transparent 25%), linear-gradient(180deg, rgba(7,7,14,0.92) 0%, rgba(7,7,14,0.98) 100%)' }} />
+        <div className="parallax-layer bg-aurora-spin" style={{ position: 'absolute', top: '-38%', left: '24%', width: 'min(76vw, 980px)', height: 'min(76vw, 980px)', borderRadius: '50%', background: 'conic-gradient(from 120deg, rgba(34,211,238,0.12), rgba(37,99,235,0.18), rgba(20,184,166,0.14), rgba(34,211,238,0.12))', filter: 'blur(24px)', opacity: 0.45, transform: 'translate3d(calc(var(--mx, 0) * 18px), calc(var(--my, 0) * 18px), 0)' }} />
         <div className="bg-grid" style={{ position: 'absolute', inset: '-2%', opacity: 0.35 }} />
         <div className="bg-noise" style={{ position: 'absolute', inset: 0 }} />
-        <div className="parallax-layer bg-drift-slow" style={{ position: 'absolute', top: '-12%', left: '-8%', width: 'clamp(360px, 42vw, 720px)', height: 'clamp(360px, 42vw, 720px)', borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.16) 0%, transparent 68%)', filter: 'blur(18px)', transform: 'translate3d(calc(var(--mx, 0) * 26px), calc(var(--my, 0) * 20px), 0)' }} />
+        <div className="parallax-layer bg-drift-slow" style={{ position: 'absolute', top: '-12%', left: '-8%', width: 'clamp(360px, 42vw, 720px)', height: 'clamp(360px, 42vw, 720px)', borderRadius: '50%', background: 'radial-gradient(circle, rgba(37,99,235,0.16) 0%, transparent 68%)', filter: 'blur(18px)', transform: 'translate3d(calc(var(--mx, 0) * 26px), calc(var(--my, 0) * 20px), 0)' }} />
         <div className="parallax-layer bg-drift-mid" style={{ position: 'absolute', top: '14%', right: '-12%', width: 'clamp(280px, 34vw, 560px)', height: 'clamp(280px, 34vw, 560px)', borderRadius: '50%', background: 'radial-gradient(circle, rgba(6,182,212,0.11) 0%, transparent 66%)', filter: 'blur(14px)', transform: 'translate3d(calc(var(--mx, 0) * -20px), calc(var(--my, 0) * -16px), 0)' }} />
-        <div className="parallax-layer bg-drift-fast" style={{ position: 'absolute', bottom: '-8%', left: '24%', width: 'clamp(300px, 32vw, 520px)', height: 'clamp(300px, 32vw, 520px)', borderRadius: '50%', background: 'radial-gradient(circle, rgba(217,70,239,0.11) 0%, transparent 68%)', filter: 'blur(16px)', transform: 'translate3d(calc(var(--mx, 0) * 14px), calc(var(--my, 0) * -14px), 0)' }} />
+        <div className="parallax-layer bg-drift-fast" style={{ position: 'absolute', bottom: '-8%', left: '24%', width: 'clamp(300px, 32vw, 520px)', height: 'clamp(300px, 32vw, 520px)', borderRadius: '50%', background: 'radial-gradient(circle, rgba(20,184,166,0.11) 0%, transparent 68%)', filter: 'blur(16px)', transform: 'translate3d(calc(var(--mx, 0) * 14px), calc(var(--my, 0) * -14px), 0)' }} />
       </div>
 
       {/* ── NAV ───────────────────────────────────────────────────────── */}
@@ -498,9 +498,9 @@ export function LandingPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{
             width: 32, height: 32, borderRadius: 8,
-            background: 'linear-gradient(135deg, #7c3aed, #4f46e5)',
+            background: 'linear-gradient(135deg, #2563eb, #0ea5e9)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 4px 12px rgba(124,58,237,0.4)',
+            boxShadow: '0 4px 12px rgba(37,99,235,0.4)',
           }}>
             <GitBranch size={15} color="#fff" />
           </div>
@@ -509,7 +509,10 @@ export function LandingPage() {
 
         <div className="nav-links" style={{ display: 'flex', gap: 28, margin: '0 auto' }}>
           {['Features', 'How it works', 'Use Cases', 'Tech'].map(l => (
-            <a key={l} className="nav-link">{l}</a>
+            <a key={l} href={`#${l.toLowerCase().replace(/\s+/g, '-')}`} className="nav-link" onClick={(e) => {
+              e.preventDefault();
+              document.getElementById(l.toLowerCase().replace(/\s+/g, '-'))?.scrollIntoView({ behavior: 'smooth' });
+            }}>{l}</a>
           ))}
         </div>
 
@@ -540,7 +543,7 @@ export function LandingPage() {
             }}>
               Automate & Simulate<br />
               <span className="premium-gradient-text" style={{
-                backgroundImage: `linear-gradient(135deg, ${CYAN} 0%, #a78bfa 50%, ${FUCHSIA} 100%)`,
+                backgroundImage: `linear-gradient(135deg, ${CYAN} 0%, #93c5fd 50%, ${TEAL} 100%)`,
                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
               }}>
@@ -615,7 +618,7 @@ export function LandingPage() {
                     { label: 'Start', color: '#10b981', icon: <Play size={10} /> },
                     { label: 'Task', color: '#3b82f6', icon: <FileText size={10} /> },
                     { label: 'Approval', color: '#f59e0b', icon: <CheckCircle2 size={10} /> },
-                    { label: 'Auto Step', color: '#8b5cf6', icon: <Zap size={10} /> },
+                    { label: 'Auto Step', color: '#3b82f6', icon: <Zap size={10} /> },
                     { label: 'End', color: '#f43f5e', icon: <ShieldCheck size={10} /> },
                   ].map((n, i) => (
                     <div key={n.label} style={{
@@ -633,7 +636,7 @@ export function LandingPage() {
                   ))}
                 </div>
                 {/* Main canvas */}
-                <div style={{ flex: 1, position: 'relative', overflow: 'hidden', background: `radial-gradient(circle at 30% 50%, rgba(124,58,237,0.04) 0%, transparent 60%)` }}>
+                <div style={{ flex: 1, position: 'relative', overflow: 'hidden', background: `radial-gradient(circle at 30% 50%, rgba(37,99,235,0.04) 0%, transparent 60%)` }}>
                   {/* Dot grid */}
                   <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
                     <defs><pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="0.7" fill="rgba(255,255,255,0.06)" /></pattern></defs>
@@ -656,8 +659,8 @@ export function LandingPage() {
                       </div>
                     </div>
                   ))}
-                  <div style={{ marginTop: 16, background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', borderRadius: 6, padding: '8px 10px' }}>
-                    <p style={{ fontSize: 9, color: '#a78bfa', margin: 0, fontWeight: 600 }}>✓ Validation Passed</p>
+                  <div style={{ marginTop: 16, background: 'rgba(37,99,235,0.15)', border: '1px solid rgba(37,99,235,0.3)', borderRadius: 6, padding: '8px 10px' }}>
+                    <p style={{ fontSize: 9, color: '#93c5fd', margin: 0, fontWeight: 600 }}>✓ Validation Passed</p>
                     <p style={{ fontSize: 9, color: 'rgba(167,139,250,0.6)', margin: '2px 0 0' }}>3 nodes connected</p>
                   </div>
                 </div>
@@ -685,7 +688,7 @@ export function LandingPage() {
               {[
                 { icon: <Clock size={20} />, color: '#f43f5e', title: 'Manual & Slow', desc: 'Onboarding processes take 2–3 weeks when 80% can be automated in hours.' },
                 { icon: <Eye size={20} />, color: '#f59e0b', title: 'Zero Visibility', desc: 'Nobody knows where a request is stuck until someone follows up manually.' },
-                { icon: <AlertTriangle size={20} />, color: '#8b5cf6', title: 'Error-Prone', desc: 'Steps get missed, deadlines are blown, and compliance risks accumulate silently.' },
+                { icon: <AlertTriangle size={20} />, color: '#3b82f6', title: 'Error-Prone', desc: 'Steps get missed, deadlines are blown, and compliance risks accumulate silently.' },
                 { icon: <Users size={20} />, color: '#06b6d4', title: 'Siloed Teams', desc: 'HR, IT, Finance and Management each have disconnected processes with no shared logic.' },
               ].map((item, i) => (
                 <div
@@ -707,11 +710,11 @@ export function LandingPage() {
         {/* ═══════════════════════════════════════════════════════════════
             §3  SOLUTION
         ═══════════════════════════════════════════════════════════════ */}
-        <section style={{ padding: `clamp(64px, 7vw, 88px) ${sectionX}`, background: 'rgba(124,58,237,0.04)', borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
+        <section id="how-it-works" style={{ padding: `clamp(64px, 7vw, 88px) ${sectionX}`, background: 'rgba(37,99,235,0.04)', borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
           <Section delay={70} duration={800} distance={34}>
             <div className="two-col-mobile" style={{ display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: 64, alignItems: 'center' }}>
               <div>
-                <Tag color={VIOLET}><Sparkles size={11} /> The Solution</Tag>
+                <Tag color={BLUE}><Sparkles size={11} /> The Solution</Tag>
                 <h2 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 800, letterSpacing: '-0.03em', margin: '20px 0 20px', lineHeight: 1.1 }}>
                   Build Workflows Like Drawing a Diagram
                 </h2>
@@ -755,7 +758,7 @@ export function LandingPage() {
                     { label: 'Employee submits request', color: '#10b981', step: 1 },
                     { label: 'Manager reviews & approves', color: '#f59e0b', step: 2 },
                     { label: 'HR logs the decision', color: '#3b82f6', step: 3 },
-                    { label: 'System notifies payroll', color: '#8b5cf6', step: 4 },
+                    { label: 'System notifies payroll', color: '#3b82f6', step: 4 },
                     { label: 'Flow complete ✓', color: '#f43f5e', step: 5 },
                   ].map((s, i) => (
                     <div key={s.label} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
@@ -779,7 +782,7 @@ export function LandingPage() {
         {/* ═══════════════════════════════════════════════════════════════
             §4  CORE FEATURES
         ═══════════════════════════════════════════════════════════════ */}
-        <section style={{ padding: `clamp(72px, 8vw, 96px) ${sectionX}` }}>
+        <section id="features" style={{ padding: `clamp(72px, 8vw, 96px) ${sectionX}` }}>
           <Section delay={90} duration={820} distance={34}>
             <div style={{ textAlign: 'center', marginBottom: 56 }}>
               <Tag color={CYAN}><Zap size={11} /> Core Features</Tag>
@@ -794,9 +797,14 @@ export function LandingPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20, maxWidth: 1240, margin: '0 auto' }}>
               {[
                 {
-                  icon: <Sparkles size={22} />, color: '#d946ef', title: 'AI Workflow Copilot',
+                  icon: <Sparkles size={22} />, color: '#14b8a6', title: 'AI Workflow Copilot',
                   desc: 'Describe your intent in plain English. The AI auto-wires the nodes, handles the layout, and scaffolds the entire logic path instantly.',
-                  tags: ['Natural Language', 'Auto-Wiring', 'LLM-Powered'],
+                  tags: ['Natural Language', 'Auto-Wiring', 'Gemini-powered'],
+                },
+                {
+                  icon: <Users size={22} />, color: '#8b5cf6', title: 'Real-Time Multiplayer',
+                  desc: 'Figma-style collaboration. See live cursors, track presence, and lock nodes instantly as your team co-edits workflows together.',
+                  tags: ['Supabase Realtime', 'Live Cursors', 'Node Locking'],
                 },
                 {
                   icon: <Activity size={22} />, color: '#10b981', title: 'Real-Time Playback',
@@ -862,13 +870,13 @@ export function LandingPage() {
 
             <div className="two-col-mobile" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0, position: 'relative' }}>
               {/* Connecting line */}
-              <div style={{ position: 'absolute', top: 32, left: '12.5%', right: '12.5%', height: 1, background: `linear-gradient(90deg, transparent, ${VIOLET}40, ${CYAN}40, ${FUCHSIA}40, transparent)` }} />
+              <div style={{ position: 'absolute', top: 32, left: '12.5%', right: '12.5%', height: 1, background: `linear-gradient(90deg, transparent, ${BLUE}40, ${CYAN}40, ${TEAL}40, transparent)` }} />
 
               {[
-                { step: '01', title: 'Add Nodes', desc: 'Drag Start, Task, Approval, Automated Step, and End nodes from the sidebar onto the canvas.', color: '#8b5cf6' },
+                { step: '01', title: 'Add Nodes', desc: 'Drag Start, Task, Approval, Automated Step, and End nodes from the sidebar onto the canvas.', color: '#3b82f6' },
                 { step: '02', title: 'Connect Logic', desc: 'Draw edges between nodes to define the execution path. The graph engine tracks all connections.', color: CYAN },
                 { step: '03', title: 'Configure Each Step', desc: 'Click any node to open its property form. Set assignees, due dates, approver roles, and automation params.', color: '#10b981' },
-                { step: '04', title: 'Simulate & Deploy', desc: 'Run the sandbox simulator to preview execution. Validate structure, fix errors, then promote to Active.', color: FUCHSIA },
+                { step: '04', title: 'Simulate & Deploy', desc: 'Run the sandbox simulator to preview execution. Validate structure, fix errors, then promote to Active.', color: TEAL },
               ].map((s, i) => (
                 <div
                   key={s.step}
@@ -904,11 +912,11 @@ export function LandingPage() {
         {/* ═══════════════════════════════════════════════════════════════
             §6  TECH STACK
         ═══════════════════════════════════════════════════════════════ */}
-        <section style={{ padding: `clamp(64px, 7vw, 88px) ${sectionX}` }}>
+        <section id="tech" style={{ padding: `clamp(64px, 7vw, 88px) ${sectionX}` }}>
           <Section delay={120} duration={860} distance={36}>
             <div className="two-col-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
               <div>
-                <Tag color={FUCHSIA}><Code2 size={11} /> Technical Architecture</Tag>
+                <Tag color={TEAL}><Code2 size={11} /> Technical Architecture</Tag>
                 <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 42px)', fontWeight: 800, letterSpacing: '-0.03em', margin: '20px 0 16px', lineHeight: 1.15 }}>
                   Built on a Scalable, Graph-Native Foundation
                 </h2>
@@ -916,7 +924,7 @@ export function LandingPage() {
                   Every architectural choice is intentional — from using Zustand over Redux (less boilerplate, simpler graph state) to MSW over JSON Server (no separate process, real network DevTools).
                 </p>
                 {[
-                  { label: 'Graph Engine', val: '@xyflow/react v12', color: VIOLET },
+                  { label: 'Graph Engine', val: '@xyflow/react v12', color: BLUE },
                   { label: 'State', val: 'Zustand + immer', color: CYAN },
                   { label: 'Validation', val: 'Zod + React Hook Form', color: '#10b981' },
                   { label: 'Backend', val: 'Supabase (PostgreSQL + JSONB)', color: '#f59e0b' },
@@ -946,7 +954,7 @@ export function LandingPage() {
         {/* ═══════════════════════════════════════════════════════════════
             §7  USE CASES
         ═══════════════════════════════════════════════════════════════ */}
-        <section style={{ padding: `clamp(64px, 7vw, 88px) ${sectionX}`, background: 'rgba(255,255,255,0.01)', borderTop: `1px solid ${BORDER}` }}>
+        <section id="use-cases" style={{ padding: `clamp(64px, 7vw, 88px) ${sectionX}`, background: 'rgba(255,255,255,0.01)', borderTop: `1px solid ${BORDER}` }}>
           <Section delay={140} duration={880} distance={38}>
             <div style={{ textAlign: 'center', marginBottom: 48 }}>
               <Tag color="#10b981"><Network size={11} /> Use Cases</Tag>
@@ -995,16 +1003,16 @@ export function LandingPage() {
           <Section delay={160} duration={900} distance={40}>
             <div className="cinematic-cta" style={{
               textAlign: 'center',
-              background: 'linear-gradient(135deg, rgba(124,58,237,0.12) 0%, rgba(6,182,212,0.06) 100%)',
-              border: `1px solid rgba(124,58,237,0.2)`,
+              background: 'linear-gradient(135deg, rgba(37,99,235,0.12) 0%, rgba(6,182,212,0.06) 100%)',
+              border: `1px solid rgba(37,99,235,0.2)`,
               borderRadius: 24, padding: '64px 40px',
               position: 'relative', overflow: 'hidden',
             }}>
               {/* Decorative orbs */}
-              <div style={{ position: 'absolute', top: -40, right: -40, width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.15), transparent)', pointerEvents: 'none' }} />
+              <div style={{ position: 'absolute', top: -40, right: -40, width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(37,99,235,0.15), transparent)', pointerEvents: 'none' }} />
               <div style={{ position: 'absolute', bottom: -40, left: -40, width: 160, height: 160, borderRadius: '50%', background: 'radial-gradient(circle, rgba(6,182,212,0.1), transparent)', pointerEvents: 'none' }} />
 
-              <Tag color="#a78bfa"><Sparkles size={11} /> Ready to Build?</Tag>
+              <Tag color="#93c5fd"><Sparkles size={11} /> Ready to Build?</Tag>
               <h2 style={{ fontSize: 'clamp(28px, 5vw, 54px)', fontWeight: 800, letterSpacing: '-0.03em', margin: '24px 0 16px', lineHeight: 1.1 }}>
                 Start Designing Workflows<br />
                 <span style={{ backgroundImage: grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
@@ -1035,7 +1043,7 @@ export function LandingPage() {
         <footer style={{ borderTop: `1px solid ${BORDER}`, padding: `40px ${sectionX}` }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 20 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ width: 28, height: 28, borderRadius: 7, background: 'linear-gradient(135deg, #7c3aed, #4f46e5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: 28, height: 28, borderRadius: 7, background: 'linear-gradient(135deg, #2563eb, #0ea5e9)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <GitBranch size={13} color="#fff" />
               </div>
               <div>

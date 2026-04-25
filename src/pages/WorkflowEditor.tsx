@@ -9,6 +9,8 @@ import { useMemo, useState } from 'react';
 import { ChevronLeft, Save, Loader2, AlertCircle, UploadCloud, RotateCcw, History } from 'lucide-react';
 import clsx from 'clsx';
 import { formatDistanceToNow } from 'date-fns';
+import { useMultiplayer } from '../hooks/useMultiplayer';
+import { PresenceAvatars } from '../components/multiplayer/PresenceAvatars';
 
 export function WorkflowEditor() {
   const { id } = useParams<{ id: string }>();
@@ -28,6 +30,9 @@ export function WorkflowEditor() {
   const [panel, setPanel] = useState<'properties' | 'simulation' | 'history'>('properties');
   const [releaseNote, setReleaseNote] = useState('');
 
+  // Start multiplayer session
+  useMultiplayer(id);
+
   const nextVersion = useMemo(() => (versions[0]?.version_number ?? 0) + 1, [versions]);
 
   const handlePublish = async () => {
@@ -42,7 +47,7 @@ export function WorkflowEditor() {
         <div className="flex flex-col items-center gap-3 text-white/40">
           <AlertCircle size={32} strokeWidth={1} className="text-red-400/60" />
           <p className="text-sm">Workflow not found or failed to load.</p>
-          <button onClick={() => navigate('/workflows')} className="text-xs text-violet-400 hover:underline">
+          <button onClick={() => navigate('/workflows')} className="text-xs text-blue-400 hover:underline">
             Back to Workflows
           </button>
         </div>
@@ -71,12 +76,15 @@ export function WorkflowEditor() {
               {workflow.status === 'active' ? '● Active' : '● Draft'}
             </span>
           )}
-          <div className="ml-auto flex items-center gap-2">
-            <input
+          <div className="ml-auto flex items-center gap-4">
+            <PresenceAvatars />
+            <div className="w-px h-4 bg-white/10" />
+            <div className="flex items-center gap-2">
+              <input
               value={releaseNote}
               onChange={(event) => setReleaseNote(event.target.value)}
               placeholder="Release note for changelog"
-              className="w-56 rounded-md border border-white/10 bg-[#0f0f1a] px-2.5 py-1.5 text-xs text-white/80 placeholder:text-white/30 outline-none focus:border-violet-500/40"
+              className="w-56 rounded-md border border-white/10 bg-[#0f0f1a] px-2.5 py-1.5 text-xs text-white/80 placeholder:text-white/30 outline-none focus:border-blue-500/40"
             />
             {(['properties', 'simulation'] as const).map(p => (
               <button
@@ -84,7 +92,7 @@ export function WorkflowEditor() {
                 onClick={() => setPanel(p)}
                 className={clsx(
                   'text-xs px-3 py-1.5 rounded-md font-medium capitalize transition-colors',
-                  panel === p ? 'bg-violet-600 text-white' : 'text-white/40 hover:bg-white/5'
+                  panel === p ? 'bg-blue-600 text-white' : 'text-white/40 hover:bg-white/5'
                 )}
               >
                 {p}
@@ -94,7 +102,7 @@ export function WorkflowEditor() {
               onClick={() => setPanel('history')}
               className={clsx(
                 'text-xs px-3 py-1.5 rounded-md font-medium transition-colors flex items-center gap-1.5',
-                panel === 'history' ? 'bg-violet-600 text-white' : 'text-white/40 hover:bg-white/5'
+                panel === 'history' ? 'bg-blue-600 text-white' : 'text-white/40 hover:bg-white/5'
               )}
             >
               <History size={12} />
@@ -103,7 +111,7 @@ export function WorkflowEditor() {
             <button
               onClick={save}
               disabled={saving || !workflow}
-              className="flex items-center gap-1.5 bg-violet-600 hover:bg-violet-500 text-white text-xs px-3 py-1.5 rounded-md transition-colors disabled:opacity-50"
+              className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-1.5 rounded-md transition-colors disabled:opacity-50"
             >
               {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
               {saving ? 'Saving...' : 'Save'}
@@ -116,6 +124,7 @@ export function WorkflowEditor() {
               {publishing ? <Loader2 size={12} className="animate-spin" /> : <UploadCloud size={12} />}
               {publishing ? 'Publishing...' : `Publish v${nextVersion}`}
             </button>
+            </div>
           </div>
         </div>
 

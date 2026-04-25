@@ -93,7 +93,7 @@ export function SimulationPanel({ workflowId, dark }: SimulationPanelProps) {
           disabled={loading}
           className={clsx(
             'flex items-center gap-1.5 text-white text-xs px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed',
-            dark ? 'bg-violet-600 hover:bg-violet-500' : 'bg-indigo-600 hover:bg-indigo-700'
+            dark ? 'bg-blue-600 hover:bg-blue-500' : 'bg-indigo-600 hover:bg-indigo-700'
           )}
         >
           {loading ? <Loader2 size={12} className="animate-spin" /> : <Play size={12} />}
@@ -170,7 +170,7 @@ export function SimulationPanel({ workflowId, dark }: SimulationPanelProps) {
                       'w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold flex-shrink-0 transition-colors duration-500',
                       playingStepId === step.nodeId 
                         ? 'bg-indigo-500 text-white shadow-[0_0_15px_rgba(99,102,241,0.5)]'
-                        : dark ? 'bg-violet-500/20 text-violet-400' : 'bg-indigo-100 text-indigo-600'
+                        : dark ? 'bg-blue-500/20 text-blue-400' : 'bg-indigo-100 text-indigo-600'
                     )}>
                       {i + 1}
                     </div>

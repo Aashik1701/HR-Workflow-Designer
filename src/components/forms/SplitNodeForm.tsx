@@ -31,7 +31,7 @@ export function SplitNodeForm({ nodeId, data }: Props) {
           />
         </div>
         <div>
-          <label className="text-[10px] text-fuchsia-400 font-medium mb-1 block">Path B Label</label>
+          <label className="text-[10px] text-teal-400 font-medium mb-1 block">Path B Label</label>
           <input
             className={inputClass}
             value={data.pathBLabel}
@@ -50,7 +50,7 @@ export function SplitNodeForm({ nodeId, data }: Props) {
             step="10"
             value={data.splitPercentage}
             onChange={e => updateNodeData(nodeId, { ...data, splitPercentage: parseInt(e.target.value, 10) })}
-            className="flex-1 accent-violet-500"
+            className="flex-1 accent-blue-500"
           />
         </div>
         <div className="flex justify-between text-[10px] text-white/40 mt-1">
