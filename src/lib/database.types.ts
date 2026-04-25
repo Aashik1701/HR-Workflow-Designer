@@ -1,5 +1,9 @@
 // Minimal database types — the Supabase client is created without generics
 // to avoid complex recursive type issues while the real types file stays as reference.
+
+// Minimal Supabase Database shape required for typed createClient
+export type Database = Record<string, unknown>;
+
 export type WorkflowStatus = 'draft' | 'active' | 'archived';
 export type ActivityActionType = 'created' | 'modified' | 'deployed' | 'approved' | 'warning';
 
